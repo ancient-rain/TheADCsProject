@@ -16,24 +16,16 @@ public class UMLgen implements ICommand {
 	}
 	
 	public void update(String[] classes) {
-		// TODO Auto-generated method stub
-		System.out.println("In UMLgen");
-			//non recursive UML diagram.
-			for (int i = 0; i < classes.length; i++ ) {
-				ClassNode c = this.parser.parse(classes[i]);
-				ClassInfo ci = new ClassInfo(c);
-				this.classList.add(ci);
-			}
-			System.out.println("after loop before DisplayGraph()");
-			displayGraph();
-		
-		System.out.println("exiting UMLgen");
+		for (int i = 0; i < classes.length; i++ ) {
+			ClassNode c = this.parser.parse(classes[i]);
+			ClassInfo ci = new ClassInfo(c);
+			this.classList.add(ci);
+		}
+		displayGraph();	
 	}
 
 	private void displayGraph() {
-		// TODO Auto-generated method stub
-		System.out.println("in DisplayGraph()");
-		gv.display(this.classList);
+		gv.displayGVCode(this.classList);
 	}
 
 }

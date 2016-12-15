@@ -20,8 +20,6 @@ public class CommandLine implements ISubject {
 	}
 	
 	public void notify(String[] classes, ICommand c) {
-		// TODO Auto-generated method stub
-		System.out.println("leaving CommandLine");
 		c.update(classes);
 	}
 
@@ -34,19 +32,6 @@ public class CommandLine implements ISubject {
 	}
 	
 	public void run(String[] args) {
-		System.out.println("Starting commandLine");
-		
-//		for(int i = 0; i < args.length; i++) {
-//			if(this.commands.containsKey(args[0])) {
-//				System.out.println("command exists!");
-//				ICommand c = this.commands.get(fields[0]);
-//				Event e = new Event(fields);
-//				this.notify(e, c);
-//			} else {
-//				System.out.println("Command not recognized!");
-//			}
-//		}
-		
 		IParser p = new DesignParser();
 		ICommand genDiagram = new UMLgen(p);
 		

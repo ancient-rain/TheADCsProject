@@ -1,9 +1,7 @@
 
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
@@ -67,12 +65,10 @@ public class DesignParser implements IParser {
 			
 			// TODO: Use GOOD DESIGN to parse the classes of interest and store
 			// them.
-			System.out.println("before return c: " + classNode);
 			return classNode;
-			} catch (IOException e1) {
-			// TODO Auto-generated catch block
+		} catch (IOException e1) {
 			e1.printStackTrace();
-			}
+		}
 		System.out.println("returning null");
 		return null;
 	}
