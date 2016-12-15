@@ -37,7 +37,7 @@ public class GraphViz {
 			System.out.print("\t\tlabel = \"{");
 			
 			if (c.isInterface()) {
-				System.out.println("\\<\\<interface\\>\\>\\n");
+				System.out.print("\\<\\<interface\\>\\>\\n");
 			}			
 			
 			System.out.print(c.getClassName());
@@ -96,7 +96,7 @@ public class GraphViz {
 				System.out.print(mName + ": " + path[path.length - 1] + "\\l");
 			}
 			
-			System.out.print("}\"\n\t];\n");
+			System.out.print("}\"\n\t];\n\n");
 			
 			for (String i : interfaces) {
 				int length;
@@ -104,10 +104,10 @@ public class GraphViz {
 				String[] paths = i.split("/");
 				length = paths.length - 1;
 								
-				implement.add(name + " -> " + paths[length] + " [arrohead=\"onormal\", style=\"dashed\"];");
+				implement.add("\t" + name + " -> " + paths[length] + " [arrohead=\"onormal\", style=\"dashed\"];");
 			}
 			
-			extend.add(name + " -> " + superclass + " [arrohead=\"onormal\"];");
+			extend.add("\t" + name + " -> " + superclass + " [arrohead=\"onormal\"];");
 		}
 		
 		System.out.println();
