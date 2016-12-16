@@ -34,14 +34,14 @@ public class GraphViz {
 			System.out.println("\t" + name + " [");
 			System.out.println("\t\tshape = \"record\",");
 
-			System.out.print("\t\tlabel = \"{");
+			System.out.print("\t\tlabel = <{");
 			
 			if (c.isInterface()) {
-				System.out.print("\\<\\<interface\\>\\>\\n");
-			}			
-			
-			System.out.print(c.getClassName());
-			
+				System.out.print("interface<BR /><I>" + c.getClassName() + "</I>");
+			} else {
+				System.out.print(c.getClassName());
+			}
+					
 			if (!fields.isEmpty() || !methods.isEmpty()) {
 				System.out.print("|");
 			}
@@ -62,7 +62,7 @@ public class GraphViz {
 					System.out.print("- ");
 				}
 
-				System.out.print(fName + ": " + path[path.length - 1] + "\\l");				
+				System.out.print(fName + ": " + path[path.length - 1] + "<BR ALIGN=\"LEFT\"/>");				
 			}
 			
 			if (!fields.isEmpty()) {
@@ -86,17 +86,17 @@ public class GraphViz {
 				}
 				
 				if (mName.equals("<init>")) {
-					mName = "\\<init\\>";
+					mName = "Constructor";
 				}
 				
 				if (mName.equals("<clinit>")) {
-					mName = "\\<clinit\\>";
+					mName = "Constructor";
 				}
 				
-				System.out.print(mName + ": " + path[path.length - 1] + "\\l");
+				System.out.print(mName + ": " + path[path.length - 1] + "<BR ALIGN=\"LEFT\"/>");
 			}
 			
-			System.out.print("}\"\n\t];\n\n");
+			System.out.print("}>\n\t];\n\n");
 			
 			for (String i : interfaces) {
 				int length;
