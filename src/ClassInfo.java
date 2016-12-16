@@ -1,17 +1,9 @@
 
-
-import java.util.ArrayList;
 import java.util.List;
-
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
 
 public class ClassInfo {
 	ClassNode classNode;
@@ -22,39 +14,46 @@ public class ClassInfo {
 	
 	
 	public String getClassName() {
-		return this.classNode.name;
+		String name = this.classNode.name;
+		int length;
+		
+		String[] fields = name.split("/");
+		length = fields.length - 1;
+		
+		return fields[length];
 	}
 	
 	@SuppressWarnings("unchecked")
-	public ArrayList<String> getMethods() {
-		List<MethodNode> methods = (List<MethodNode>) this.classNode.methods;
-		ArrayList<String> arr = new ArrayList<>();
-		for (MethodNode method : methods){
-			arr.add(method.name);
-		}
-		return arr;
+	public List<MethodNode> getMethods() {
+		return (List<MethodNode>) this.classNode.methods;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public ArrayList<String> getFields() {
-		List<FieldNode> fields = (List<FieldNode>) this.classNode.fields;
-		ArrayList<String> arr = new ArrayList<>();
-		for (FieldNode field : fields){
-			arr.add(field.name);
-		}
-		return arr;
+	public List<FieldNode> getFields() {
+		return (List<FieldNode>) this.classNode.fields;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<String> getInterfaces() {
+		
 		return this.classNode.interfaces;
 	}
 	
 	public String getExtends() {
-		return this.classNode.superName;
+		String superName = this.classNode.superName;
+		int length;
+		
+		String[] path = superName.split("/");
+		length = path.length - 1;
+		
+		return path[length];
 	}
 	
-	public boolean getAccess() {
+	public boolean isPublic() {
 		return (this.classNode.access & Opcodes.ACC_PUBLIC) > 0;
+	}
+	
+	public boolean isInterface() {
+		return (this.classNode.access & Opcodes.ACC_INTERFACE) > 0;
 	}
 }
