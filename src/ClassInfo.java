@@ -14,6 +14,7 @@ public class ClassInfo {
 	
 	
 	public String getClassName() {
+		// this gets the name of the class.
 		String name = this.classNode.name;
 		int length;
 		
