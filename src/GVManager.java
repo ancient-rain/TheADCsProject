@@ -6,20 +6,22 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-public class GraphViz {
+public class GVManager {
 	GVdisplayer displayer;
 	
-	public GraphViz() {
+	public GVManager() {
 		this.displayer = null;
 	}
 	
-	public GraphViz(GVdisplayer d) {
+	public GVManager(GVdisplayer d) {
 		this.displayer = d;
 	}
 	
 	public void displayGVCode(ArrayList<ClassInfo> classes) {
-		ArrayList<String> implement = new ArrayList<>();
-		ArrayList<String> extend = new ArrayList<>();
+		GVClass cl = new GVClass();
+		GVField field = new GVField();
+		GVMethod method = new GVMethod();
+		GVDependencies depends = new GVDependencies();
 		
 		System.out.println("digraph uml_diagram {");
 		System.out.println("\trankdir = BT;\n");
@@ -30,99 +32,27 @@ public class GraphViz {
 			List<String> interfaces = c.getInterfaces();
 			String superclass = c.getExtends();
 			String name = c.getClassName();
-				
-			System.out.println("\t" + name + " [");
-			System.out.println("\t\tshape = \"record\",");
-
-			System.out.print("\t\tlabel = <{");
 			
-			if (c.isInterface()) {
-				System.out.print("interface<BR /><I>" + c.getClassName() + "</I>");
-			} else {
-				System.out.print(c.getClassName());
-			}
-					
-			if (!fields.isEmpty() || !methods.isEmpty()) {
-				System.out.print("|");
-			}
+			// print class name
+			cl.printClass(c);
 			
 			// print the fields
-			for (FieldNode f : fields) {
-				int access = f.access;
-				String fName = f.name;
-				Type returnValue = Type.getType(f.desc);
-				String returnString = returnValue.getClassName();
-				String[] path = returnString.split("\\.");
-				
-				if ((access & Opcodes.ACC_PUBLIC) > 0) {
-					System.out.print("+ ");
-				} else if ((access & Opcodes.ACC_PROTECTED) > 0) {
-					System.out.print("# ");
-				} else {
-					System.out.print("- ");
-				}
-
-				System.out.print(fName + ": " + path[path.length - 1] + "<BR ALIGN=\"LEFT\"/>");				
-			}
-			
-			if (!fields.isEmpty()) {
-				System.out.print("|");
-			}
+			field.printFields(fields);
 			
 			// print the methods
-			for (MethodNode m : methods) {
-				int access = m.access;
-				String mName = m.name;
-				Type returnValue = Type.getReturnType(m.desc);
-				String returnString = returnValue.getClassName();
-				String[] path = returnString.split("\\.");
-				
-				if ((access & Opcodes.ACC_PUBLIC) > 0) {
-					System.out.print("+ ");
-				} else if ((access & Opcodes.ACC_PROTECTED) > 0) {
-					System.out.print("# ");
-				} else {
-					System.out.print("- ");
-				}
-				
-				if (mName.equals("<init>")) {
-					mName = "Constructor";
-				}
-				
-				if (mName.equals("<clinit>")) {
-					mName = "Constructor";
-				}
-				
-				System.out.print(mName + ": " + path[path.length - 1] + "<BR ALIGN=\"LEFT\"/>");
-			}
-			
-			System.out.print("}>\n\t];\n\n");
+			method.printMethods(methods);
 			
 			for (String i : interfaces) {
-				int length;
-				
-				String[] paths = i.split("/");
-				length = paths.length - 1;
-								
-				implement.add("\t" + name + " -> " + paths[length] + " [arrohead=\"onormal\", style=\"dashed\"];");
+				depends.addImplements(i, name);
 			}
 			
-			extend.add("\t" + name + " -> " + superclass + " [arrohead=\"onormal\"];");
+			depends.addExtend(name, superclass);
+			depends.addRels(c);
 		}
 		
-		System.out.println();
-		
-		for (String i : implement) {
-			System.out.println(i);
-		}
-		
-		System.out.println();
-		
-		for (String e : extend) {
-			System.out.println(e);
-		}
+		depends.printDependencies();
+		depends.determineRel();
 		
 		System.out.println("\n}");
-		
 	}
 }
