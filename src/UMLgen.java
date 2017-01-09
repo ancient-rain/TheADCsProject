@@ -5,14 +5,14 @@ public class UMLgen implements ICommand {
 
 	IParser parser;
 	ArrayList<ClassInfo> classList;
-	GraphViz gv;
+	GVManager gv;
 	
 	
 	public UMLgen(IParser p) {
 		this.parser = p;
 		this.classList = new ArrayList<>();
 		
-		this.gv = new GraphViz();
+		this.gv = new GVManager();
 	}
 	
 	public void update(String[] classes) {

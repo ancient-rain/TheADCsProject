@@ -1,9 +1,13 @@
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.Type;
 
 public class ClassInfo {
 	ClassNode classNode;
@@ -56,5 +60,27 @@ public class ClassInfo {
 	
 	public boolean isInterface() {
 		return (this.classNode.access & Opcodes.ACC_INTERFACE) > 0;
+	}
+	
+	public HashSet<Type> getAssocTypes() {
+		List<FieldNode> fields = this.getFields();
+		List<Type> types = new ArrayList<>();
+		
+		for (FieldNode f : fields) {
+			types.add(Type.getType(f.desc));
+		}
+		
+		return new HashSet<Type>(types);
+	}
+	
+	public HashSet<Type> getDependencyTypes() {
+		List<MethodNode> methods = this.getMethods();
+		List<Type> types = new ArrayList<>();
+		
+		for (MethodNode m : methods) {
+			Type.getReturnType(m.desc);
+		}
+		
+		return new HashSet<Type>(types);
 	}
 }
