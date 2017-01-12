@@ -8,9 +8,17 @@ import org.objectweb.asm.Type;
 
 public class GVManager {
 	GVdisplayer displayer;
+	GVClass cl = new GVClass();
+	GVField field = new GVField();
+	GVMethod method = new GVMethod();
+	GVDependencies depends = new GVDependencies();
 	
 	public GVManager() {
 		this.displayer = null;
+		this.cl = new GVClass();
+		this.field = new GVField();
+		this.method = new GVMethod();
+		this.depends = new GVDependencies();
 	}
 	
 	public GVManager(GVdisplayer d) {
@@ -18,10 +26,7 @@ public class GVManager {
 	}
 	
 	public void displayGVCode(ArrayList<ClassInfo> classes) {
-		GVClass cl = new GVClass();
-		GVField field = new GVField();
-		GVMethod method = new GVMethod();
-		GVDependencies depends = new GVDependencies();
+		
 		
 		System.out.println("digraph uml_diagram {");
 		System.out.println("\trankdir = BT;\n");
@@ -34,24 +39,24 @@ public class GVManager {
 			String name = c.getClassName();
 			
 			// print class name
-			cl.printClass(c);
+			this.cl.printClass(c);
 			
 			// print the fields
-			field.printFields(fields);
+			this.field.printFields(fields);
 			
 			// print the methods
-			method.printMethods(methods);
+			this.method.printMethods(methods);
 			
 			for (String i : interfaces) {
-				depends.addImplements(i, name);
+				this.depends.addImplements(i, name);
 			}
 			
-			depends.addExtend(name, superclass);
-			depends.addRels(c);
+			this.depends.addExtend(name, superclass);
+			this.depends.addRels(c);
 		}
 		
-		depends.printDependencies();
-		depends.determineRel();
+		this.depends.printDependencies();
+		this.depends.determineRel();
 		
 		System.out.println("\n}");
 	}

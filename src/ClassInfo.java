@@ -11,6 +11,9 @@ import org.objectweb.asm.Type;
 
 public class ClassInfo {
 	ClassNode classNode;
+	ArrayList<ClassInfo> outward;
+	ArrayList<ClassInfo> inward;
+	
 	
 	public ClassInfo(ClassNode classNode) {
 		this.classNode = classNode;
@@ -26,6 +29,23 @@ public class ClassInfo {
 		length = fields.length - 1;
 		
 		return fields[length];
+	}
+	
+	public String getFullClassName() {
+		String name = this.classNode.name;
+		int length;
+		
+		String[] fields = name.split("/");
+		
+		String fullName = "";
+		for(int i = 0; i < fields.length; i++) {
+			if (i + 1 == fields.length) {
+				fullName.concat(fields[i]);
+				break;
+			}
+			fullName.concat(fields[i] + ".");
+		}
+		return fullName;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -69,7 +89,6 @@ public class ClassInfo {
 		for (FieldNode f : fields) {
 			types.add(Type.getType(f.desc));
 		}
-		
 		return new HashSet<Type>(types);
 	}
 	
@@ -83,4 +102,27 @@ public class ClassInfo {
 		
 		return new HashSet<Type>(types);
 	}
+
+
+	public void addOutward(ClassInfo v) {
+		this.outward.add(v);
+	}
+
+
+	public void addInward(ClassInfo v) {
+		this.inward.add(v); 
+	}
+
+
+	public ArrayList<ClassInfo> getInward() {
+		return this.inward;
+	}
+
+
+	public ArrayList<ClassInfo> getOutward() {
+		return this.outward;
+	}
+	
+	
+	
 }
