@@ -16,7 +16,6 @@ public class ClassInfo {
 		this.classNode = classNode;
 	}
 	
-	
 	public String getClassName() {
 		String name = this.classNode.name;
 		int length;
@@ -39,7 +38,6 @@ public class ClassInfo {
 	
 	@SuppressWarnings("unchecked")
 	public List<String> getInterfaces() {
-		
 		return this.classNode.interfaces;
 	}
 	
