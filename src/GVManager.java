@@ -12,21 +12,12 @@ public class GVManager {
 	GVMethod method;
 	GVDependencies depends;
 	Graph graph;
-	GVClass cl;
-	GVField field;
-	GVMethod method;
-	GVDependencies depends;
 	
 	public GVManager(Graph graph) {
 		this.cl = new GVClass();
 		this.field = new GVField();
 		this.method = new GVMethod();
 		this.depends = new GVDependencies(graph);
-		this.graph = graph;
-		this.cl = new GVClass();
-		this.field = new GVField();
-		this.method = new GVMethod();
-		this.depends = new GVDependencies();
 	}
 	
 	public void displayGVCode(ArrayList<ClassInfo> classes) {
