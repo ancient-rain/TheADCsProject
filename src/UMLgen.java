@@ -7,12 +7,9 @@ public class UMLgen implements ICommand {
 	ArrayList<ClassInfo> classList;
 	GVManager gv;
 	
-	
 	public UMLgen(IParser p) {
 		this.parser = p;
 		this.classList = new ArrayList<>();
-		
-		this.gv = new GVManager();
 	}
 	
 	public void update(String[] classes) {
@@ -21,6 +18,8 @@ public class UMLgen implements ICommand {
 			ClassInfo ci = new ClassInfo(c);
 			this.classList.add(ci);
 		}
+		Graph graph = new Graph(this.classList);
+		this.gv = new GVManager(graph);
 		displayGraph();	
 	}
 
