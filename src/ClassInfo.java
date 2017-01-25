@@ -1,6 +1,8 @@
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import org.objectweb.asm.Opcodes;
@@ -23,6 +25,11 @@ public class ClassInfo {
 	
 	HashMap<String, Integer> fieldAppear;
 	HashMap<String, Integer> methodAppear;
+	
+	String [] primVals = new String[] {"boolean", "int", "char", "byte" ,"short", "int",
+			"long", "float", "double", "Object", "Ojbect[]", "Z", "B", "S", "I", "J", "F",
+			"D", "C", "L", "[Z", "[B", "[S", "[I", "[J", "[F", "[D", "[C", "[L", "V", "String"};
+	HashSet<String> prims = new HashSet<String>(Arrays.asList(this.primVals));
 	
 	public ClassInfo(ClassNode classNode) {
 		this.classNode = classNode;
@@ -135,7 +142,7 @@ public class ClassInfo {
 		}
 	}
 	
-	public void populateFieldAppear() {
+	private void populateFieldAppear() {
 		List<FieldNode> fs = this.getFields();
 		
 		for (FieldNode f : fs) {
@@ -178,48 +185,103 @@ public class ClassInfo {
 		}
 	}
 	
-	public void populateMethodAppear() {
+	private void populateMethodAppear() {
 		List<MethodNode> methods = this.getMethods();
+		// the return and parameter types of methods of a class
+		ArrayList<String> methodTypes = new ArrayList<>();
 		
 		for (MethodNode m: methods) {
 			if (m.signature != null) {
-				String colEleType = m.signature;
-				String[] path = colEleType.split("/");
-				int lastIndex = path.length - 1;
-				colEleType = path[lastIndex];
-				String[] path2 = colEleType.split(";");
-				colEleType = path2[0];
-				this.methodAppear.put(colEleType, 2);
-			} else if (m.desc.charAt(0) == '['){
-				String colEleType = m.desc;
-				String[] path = colEleType.split("/");
-				int lastIndex = path.length - 1;
-				colEleType = path[lastIndex];
-				String[] path2 = colEleType.split(";");
-				colEleType = path2[0];
-				this.methodAppear.put(colEleType, 2);
-			} else {
-				String type = m.desc;
-				String[] path = type.split("/");
-				int lastIndex = path.length - 1;
+				String type = m.signature;
+				String[] path = type.split("\\)");
+				String params = path[0];
+				String [] pathParam = params.split("\\(");
 				
-				int len = path[lastIndex].length();
-				if (len == 1) {
-					type = path[lastIndex];
-				} else {
-					type = path[lastIndex].substring(0, len - 1);
+				if (pathParam.length != 0) {
+					int lastIndex = pathParam.length - 1;
+					params = pathParam[lastIndex];
+					pathParam = params.split("<");
+					
+					for (String s : pathParam) {
+						if (s.contains("/")) {
+							String [] p = s.split("/");
+							int len = p.length - 1;
+							String current = p[len];
+							
+							if (!this.prims.contains(current)) {
+								methodTypes.add(current);
+							}
+						}	
+					}
 				}
 				
-				if(this.methodAppear.containsKey(path[lastIndex])) {
-					int appear = this.methodAppear.get(path[lastIndex]);
-					this.methodAppear.put(path[lastIndex], appear++);
-				} else {
-					this.methodAppear.put(path[lastIndex], 1);
+				//checking for the return type
+				String returnType = path[1];
+				
+				if (returnType.length() != 0 && !this.prims.contains(returnType)) {
+					String [] returnPath = returnType.split("<");
+					String returnVal = returnPath[0];
+					
+					if (returnVal.contains("/")) {
+						returnPath = returnVal.split("/");
+						int lastIndex = returnPath.length - 1;
+						String current = returnPath[lastIndex];
+						
+						if (!this.prims.contains(current)) {
+							System.out.println(current);
+							methodTypes.add(current);
+						}
+					}
+				}
+			} else {
+				String type = m.desc;
+				String[] path = type.split("\\)");
+				String params = path[0];
+				String [] pathParam = params.split("\\(");
+				
+				//if the parameter is not null
+				if (pathParam.length != 0) {
+					int lastIndex = pathParam.length - 1;
+					params = pathParam[lastIndex];
+					pathParam = params.split(";");
+
+					for (String s : pathParam) {
+						if (s.contains("/")) {
+							String [] p = s.split("/");
+							int len = p.length - 1;
+							String current = p[len];
+							
+							if (!this.prims.contains(current)) {
+								methodTypes.add(current);
+							}
+						}
+					}
+				}
+				
+				//checking for the return type
+				String returnType = path[1];
+				
+				if (returnType.length() != 0 && !this.prims.contains(returnType)) {
+					String [] returnPath = returnType.split("/");
+					int lastIndex = returnPath.length - 1;
+					String returnVal = returnPath[lastIndex];
+					returnPath = returnVal.split(";");
+					String current = returnPath[0];
+					
+					if (!this.prims.contains(current)) {
+						methodTypes.add(current);
+					}
 				}
 			}
 		}
-	}
-	
-	
-	
+		
+		for (String m : methodTypes) {
+			if (this.methodAppear.containsKey(m)) {
+				int appear = this.methodAppear.get(m);
+				this.methodAppear.put(m, appear++);
+			} else {
+				this.methodAppear.put(m, 1);
+			}
+		}
+	}	
 }
