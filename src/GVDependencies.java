@@ -102,44 +102,44 @@ public class GVDependencies {
 		//go through all of the classes determining associations and dependencies
 		for(String className : this.classNames) {
 			ClassInfo ci = g.get(className);
-			HashMap<String, Integer> methods = ci.getMethodAppear();
-//			System.out.println("\n");
-//			for (Map.Entry<String, Integer> c: methods.entrySet()) {
-//				System.out.println(c.getKey());
-//			}
-//			
-			//loop through all of the fields for the class
-			for(Map.Entry<String, Integer> entry : methods.entrySet()) {
-				String pointsTo = entry.getKey();
+			HashMap<String, Integer> fields = ci.getFieldAppear();
+			
+			if (fields.isEmpty()) {
+				HashMap<String, Integer> methods = ci.getMethodAppear();
+		
+				//loop through all of the methods for the class
+				for(Map.Entry<String, Integer> entry : methods.entrySet()) {
+					String pointsTo = entry.getKey();
+			
+					//check to see if one of the associations is in graph 
+					//of classes being analyzed 
+					if(g.containsKey(pointsTo)) {
+						ClassInfo ptClass = g.get(pointsTo);
+						HashMap<String, Integer> ptMethods = ptClass.getMethodAppear();
 				
-				//check to see if one of the associations is in graph 
-				//of classes being analyzed 
-				if(g.containsKey(pointsTo)) {
-					ClassInfo ptClass = g.get(pointsTo);
-					HashMap<String, Integer> ptMethods = ptClass.getMethodAppear();
-					
-					//check to see if the class that is an association 
-					//also associates with the class being analyzed
-					if(ptMethods.containsKey(className)) {
-						String appended1 = className.concat(pointsTo);
-						String appended2 = pointsTo.concat(className);
-						//check to see if double arrow already exists 
-						//between the two classes
-						if(!(doubleArrow.contains(appended1) || doubleArrow.contains(appended2))) {
-							doubleArrow.add(appended1);
-							doubleArrow.add(appended2);
-							System.out.println("\t" + className + " -> " + entry.getKey() + " [arrowhead=\"vee\", arrowtail=\"vee\", dir=\"both\"];");
+						//check to see if the class that is an association 
+						//also associates with the class being analyzed
+						if(ptMethods.containsKey(className)) {
+							String appended1 = className.concat(pointsTo);
+							String appended2 = pointsTo.concat(className);
+							//check to see if double arrow already exists 
+							//between the two classes
+							if(!(doubleArrow.contains(appended1) || doubleArrow.contains(appended2))) {
+								doubleArrow.add(appended1);
+								doubleArrow.add(appended2);
+								System.out.println("\t" + className + " -> " + entry.getKey() + " [arrowhead=\"vee\", arrowtail=\"vee\", dir=\"both\"];");
+							}	
+						}
+					} else {
+			
+						if (entry.getValue() > 1) {
+							System.out.println("\t" + className + " -> " + entry.getKey() + " [arrowhead=\"vee\", headlabel=\"1..*\"];");
+						} else {
+							System.out.println("\t" + className + " -> " + entry.getKey() + " [arrowhead=\"vee\"];");
 						}
 					}
-				} else {
-				
-					if (entry.getValue() > 1) {
-						System.out.println("\t" + className + " -> " + entry.getKey() + " [arrowhead=\"vee\", headlabel=\"1..*\"];");
-					} else {
-						System.out.println("\t" + className + " -> " + entry.getKey() + " [arrowhead=\"vee\"];");
-					}
-				}
-			}	
+				}	
+			}
 		}
 	}
 
