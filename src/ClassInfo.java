@@ -190,6 +190,7 @@ public class ClassInfo {
 		// the return and parameter types of methods of a class
 		ArrayList<String> methodTypes = new ArrayList<>();
 		
+		//getting the parameters of each of the methods
 		for (MethodNode m: methods) {
 			if (m.signature != null) {
 				String type = m.signature;
@@ -228,7 +229,7 @@ public class ClassInfo {
 						String current = returnPath[lastIndex];
 						
 						if (!this.prims.contains(current)) {
-							System.out.println(current);
+							//System.out.println(current);
 							methodTypes.add(current);
 						}
 					}
