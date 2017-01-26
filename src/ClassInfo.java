@@ -1,8 +1,5 @@
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import org.objectweb.asm.Opcodes;
@@ -15,21 +12,17 @@ public class ClassInfo {
 	ClassNode classNode;
 	
 	String className;
-	
+	String sterotype;
 	String extendz;
-	List<String> implementz;
-
-	List<String> inDependz;
 	
-	List<String> inAssocz;
+	List<String> implementz;
+//	List<String> inDependz;
+//	List<String> inAssocz;
 	
 	HashMap<String, Integer> fieldAppear;
 	HashMap<String, Integer> methodAppear;
 	
-	String [] primVals = new String[] {"boolean", "int", "char", "byte" ,"short", "int",
-			"long", "float", "double", "Object", "Ojbect[]", "Z", "B", "S", "I", "J", "F",
-			"D", "C", "L", "[Z", "[B", "[S", "[I", "[J", "[F", "[D", "[C", "[L", "V", "String"};
-	HashSet<String> prims = new HashSet<String>(Arrays.asList(this.primVals));
+	Settings settings;
 	
 	public ClassInfo(ClassNode classNode) {
 		this.classNode = classNode;
@@ -38,8 +31,9 @@ public class ClassInfo {
 		this.implementz = this.getInterfacez();
 		this.fieldAppear = new HashMap<>(); 
 		this.methodAppear = new HashMap<>();
-		this.inDependz = new ArrayList<>();
-		this.inAssocz = new ArrayList<>();
+//		this.inDependz = new ArrayList<>();
+//		this.inAssocz = new ArrayList<>();
+		this.settings = Settings.getInstance();
 		this.populateFieldAppear();
 		this.populateMethodAppear();
 	}
@@ -110,21 +104,29 @@ public class ClassInfo {
 		return this.methodAppear;
 	}
 	
-	public List<String> getInAssoc() {
-		return this.inAssocz;
+//	public List<String> getInAssoc() {
+//		return this.inAssocz;
+//	}
+	
+//	public List<String> getInDepend() {
+//		return this.inDependz;
+//	}
+	
+	public String getSterotype() {
+		return this.sterotype;
 	}
 	
-	public List<String> getInDepend() {
-		return this.inDependz;
+	public void setSterotype(String s) {
+		this.sterotype = s;
 	}
 	
-	public void addInAssoc(String c) {
-		this.inAssocz.add(c);
-	}
+//	public void addInAssoc(String c) {
+//		this.inAssocz.add(c);
+//	}
 	
-	public void addInDepends(String c) {
-		this.inDependz.add(c);
-	}
+//	public void addInDepends(String c) {
+//		this.inDependz.add(c);
+//	}
 	
 	public boolean isPublic() {
 		return (this.classNode.access & Opcodes.ACC_PUBLIC) > 0;
@@ -209,7 +211,7 @@ public class ClassInfo {
 							int len = p.length - 1;
 							String current = p[len];
 							
-							if (!this.prims.contains(current)) {
+							if (!this.settings.isPrimVal(current)) {
 								methodTypes.add(current);
 							}
 						}	
@@ -219,7 +221,7 @@ public class ClassInfo {
 				//checking for the return type
 				String returnType = path[1];
 				
-				if (returnType.length() != 0 && !this.prims.contains(returnType)) {
+				if (returnType.length() != 0 && !this.settings.isPrimVal(returnType)) {
 					String [] returnPath = returnType.split("<");
 					String returnVal = returnPath[0];
 					
@@ -228,7 +230,7 @@ public class ClassInfo {
 						int lastIndex = returnPath.length - 1;
 						String current = returnPath[lastIndex];
 						
-						if (!this.prims.contains(current)) {
+						if (!this.settings.isPrimVal(current)) {
 							//System.out.println(current);
 							methodTypes.add(current);
 						}
@@ -252,7 +254,7 @@ public class ClassInfo {
 							int len = p.length - 1;
 							String current = p[len];
 							
-							if (!this.prims.contains(current)) {
+							if (!this.settings.isPrimVal(current)) {
 								methodTypes.add(current);
 							}
 						}
@@ -262,14 +264,14 @@ public class ClassInfo {
 				//checking for the return type
 				String returnType = path[1];
 				
-				if (returnType.length() != 0 && !this.prims.contains(returnType)) {
+				if (returnType.length() != 0 && !this.settings.isPrimVal(returnType)) {
 					String [] returnPath = returnType.split("/");
 					int lastIndex = returnPath.length - 1;
 					String returnVal = returnPath[lastIndex];
 					returnPath = returnVal.split(";");
 					String current = returnPath[0];
 					
-					if (!this.prims.contains(current)) {
+					if (!this.settings.isPrimVal(current)) {
 						methodTypes.add(current);
 					}
 				}

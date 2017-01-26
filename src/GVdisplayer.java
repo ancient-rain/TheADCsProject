@@ -1,4 +1,3 @@
-import org.objectweb.asm.tree.ClassNode;
 
 public abstract class GVdisplayer {
 	GVdisplayer displayer;

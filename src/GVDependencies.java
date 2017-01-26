@@ -1,26 +1,17 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.FieldNode;
-import org.objectweb.asm.tree.MethodNode;
 
 public class GVDependencies {
 	
 	Graph graph; 
 	ArrayList<String> classNames;
-	String [] primVals = new String[] {"boolean", "int", "char", "byte" ,"short", "int",
-			"long", "float", "double", "Object", "Ojbect[]", "Z", "B", "S", "I", "J", "F",
-			"D", "C", "L", "[Z", "[B", "[S", "[I", "[J", "[F", "[D", "[C", "[L"};
-	HashSet<String> prims = new HashSet<String>(Arrays.asList(this.primVals)); 
+	Settings settings;
 	
 	public GVDependencies (Graph g) {
 		this.graph = g;
+		this.settings = Settings.getInstance();
 		this.classNames = new ArrayList<>();
 		
 		for (ClassInfo ci : this.graph.getClasses()) {
@@ -61,7 +52,7 @@ public class GVDependencies {
 				String pointsTo = entry.getKey();
 				
 				//check to see if the field is not a primitive type
-				if (!this.prims.contains(pointsTo)) {
+				if (!this.settings.isPrimVal(pointsTo)) {
 				
 					//check to see if one of the associations is in graph 
 					//of classes being analyzed 

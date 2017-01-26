@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class CommandLine implements ISubject {
 
@@ -34,8 +33,29 @@ public class CommandLine implements ISubject {
 	public void run(String[] args) {
 		IParser p = new DesignParser();
 		ICommand genDiagram = new UMLgen(p);
+		Settings settings = Settings.getInstance();
+		ArrayList<String> tempArgs = new ArrayList<>();
 		
-		this.notify(args, genDiagram);
+		for (int i = 0; i < args.length; i++) { //flags must be initialized before java files
+			String s = args[i];
+			
+			if (s.charAt(0) != '-') {
+				tempArgs.add(args[i]);
+			}
+			
+			String firstTwo = s.substring(0, 2);
+			
+			if (firstTwo.equals("-r")) {
+				settings.setRecursive();
+			} else {
+				settings.addDetectors(s);
+			}			
+		}
 		
+		String[] classes = new String[tempArgs.size()];
+		
+		classes = tempArgs.toArray(classes);
+
+		this.notify(classes, genDiagram);		
 	}
 }
