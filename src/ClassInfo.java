@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
@@ -26,8 +27,8 @@ public class ClassInfo {
 	
 	public ClassInfo(ClassNode classNode) {
 		this.classNode = classNode;
-		this.className = this.getClazzName();
-		this.extendz = this.getExtendz(); 
+		this.className = this.classNode.name;
+		this.extendz = this.classNode.superName;
 		this.implementz = this.getInterfacez();
 		this.fieldAppear = new HashMap<>(); 
 		this.methodAppear = new HashMap<>();
@@ -38,16 +39,17 @@ public class ClassInfo {
 		this.populateMethodAppear();
 	}
 	
-	private String getClazzName() {
-		// this gets the name of the class.
-		String name = this.classNode.name;
-		int length;
-		
-		String[] fields = name.split("/");
-		length = fields.length - 1;
-		
-		return fields[length];
-	}
+//	private String getClazzName() {
+//		// this gets the name of the class.
+//		String name = this.classNode.name;
+//		System.out.println(name);
+//		int length;
+//		
+//		String[] fields = name.split("/");
+//		length = fields.length - 1;
+//		
+//		return fields[length];
+//	}
 	
 	public String getClassName() {
 		return this.className;
@@ -66,14 +68,14 @@ public class ClassInfo {
 	@SuppressWarnings("unchecked")
 	private List<String> getInterfacez() {
 		List<String> unSplit = this.classNode.interfaces;
-		ArrayList<String> split = new ArrayList<>();
+        ArrayList<String> split = new ArrayList<>();
 		for(String name : unSplit) {
-			int length;
-			
-			String[] fields = name.split("/");
-			length = fields.length - 1;
-			
-			split.add(fields[length]);
+			//int length;
+//			System.out.println(name);
+//			String[] fields = name.split("/");
+//			length = fields.length - 1;
+//			
+			split.add(name);
 		}
 		return split;
 	}
@@ -82,15 +84,15 @@ public class ClassInfo {
 		return this.implementz;
 	}
 	
-	private String getExtendz() {
-		String superName = this.classNode.superName;
-		int length;
-		
-		String[] path = superName.split("/");
-		length = path.length - 1;
-		
-		return path[length];
-	}
+//	private String getExtendz() {
+//		String superName = this.classNode.superName;
+//		int length;
+//		
+//		String[] path = superName.split("/");
+//		length = path.length - 1;
+//		
+//		return path[length];
+//	}
 	
 	public String getExtends() {
 		return this.extendz;
@@ -150,41 +152,54 @@ public class ClassInfo {
 		for (FieldNode f : fs) {
 			if (f.signature != null) {
 				String colEleType = f.signature;
-				String[] path = colEleType.split("/");
-				int lastIndex = path.length - 1;
-				colEleType = path[lastIndex];
-				String[] path2 = colEleType.split(";");
-				colEleType = path2[0];
-				this.fieldAppear.put(colEleType, 2);
+//				System.out.println(colEleType);
+
+				// get rid of carrots
+				String[] temp = colEleType.split("<");
+				String temp1 = temp[1];
+				
+				//get rid of the L in front of the object
+				String nameJunk = temp1.substring(1);
+				
+				//get rid of the junk at the end
+				String[] nameSplit = nameJunk.split(";");
+				
+				//get the actual name
+				String name = nameSplit[0];
+//				System.out.println(name);
+				this.fieldAppear.put(name, 2);
 				
 			} else if (f.desc.charAt(0) == '['){
 				String colEleType = f.desc;
-				String[] path = colEleType.split("/");
-				int lastIndex = path.length - 1;
-				colEleType = path[lastIndex];
-				String[] path2 = colEleType.split(";");
-				colEleType = path2[0];
-				this.fieldAppear.put(colEleType, 2);
+				
+				String name = colEleType;
+				if (!this.settings.isPrimVal(colEleType)) {
+					name = colEleType.substring(2, colEleType.length() - 1);
+				}
+				
+				this.fieldAppear.put(name, 2);
 			} else { // if not a collection
 				String type = f.desc;
-				String[] path = type.split("/");
-				int lastIndex = path.length - 1;
+//				System.out.println(type + " type");
 				
-				int len = path[lastIndex].length();
-				if (len == 1) {
-					type = path[lastIndex];
-				} else {
-					type = path[lastIndex].substring(0, len - 1);
+				String name = type;
+				if (!this.settings.isPrimVal(type)) {
+					name = type.substring(1, type.length() - 1);
 				}
-
-				if(this.fieldAppear.containsKey(type)) {
-					int appear = this.fieldAppear.get(type);
-					this.fieldAppear.put(type, appear++);
+//				System.out.println(name + " type");
+				if(this.fieldAppear.containsKey(name)) {
+					int appear = this.fieldAppear.get(name);
+					this.fieldAppear.put(name, appear++);
 				} else {
-					this.fieldAppear.put(type, 1);
+					this.fieldAppear.put(name, 1);
 				}
 			}
 		}
+		
+//		for (Map.Entry<String, Integer> entry : this.fieldAppear.entrySet()) {
+//			System.out.println("key: " + entry.getKey() + " val: " + entry.getValue());
+//		}
+		
 	}
 	
 	private void populateMethodAppear() {
@@ -194,50 +209,55 @@ public class ClassInfo {
 		
 		//getting the parameters of each of the methods
 		for (MethodNode m: methods) {
-			if (m.signature != null) {
-				String type = m.signature;
-				String[] path = type.split("\\)");
-				String params = path[0];
-				String [] pathParam = params.split("\\(");
-				
-				if (pathParam.length != 0) {
-					int lastIndex = pathParam.length - 1;
-					params = pathParam[lastIndex];
-					pathParam = params.split("<");
-					
-					for (String s : pathParam) {
-						if (s.contains("/")) {
-							String [] p = s.split("/");
-							int len = p.length - 1;
-							String current = p[len];
-							
-							if (!this.settings.isPrimVal(current)) {
-								methodTypes.add(current);
-							}
-						}	
-					}
-				}
-				
-				//checking for the return type
-				String returnType = path[1];
-				
-				if (returnType.length() != 0 && !this.settings.isPrimVal(returnType)) {
-					String [] returnPath = returnType.split("<");
-					String returnVal = returnPath[0];
-					
-					if (returnVal.contains("/")) {
-						returnPath = returnVal.split("/");
-						int lastIndex = returnPath.length - 1;
-						String current = returnPath[lastIndex];
-						
-						if (!this.settings.isPrimVal(current)) {
-							//System.out.println(current);
-							methodTypes.add(current);
-						}
-					}
-				}
-			} else {
+//			if (m.signature != null) {
+//				String temp = m.desc;
+//				System.out.println(temp);
+//				String type = m.signature;
+//				System.out.println(type);
+//				String[] path = type.split("\\)");
+//				String params = path[0];
+//				String [] pathParam = params.split("\\(");
+//				
+//				if (pathParam.length != 0) {
+//					int lastIndex = pathParam.length - 1;
+//					params = pathParam[lastIndex];
+//					pathParam = params.split("<");
+//					
+//					for (String s : pathParam) {
+//						if (s.contains("/")) {
+//							String [] p = s.split("/");
+//							int len = p.length - 1;
+//							String current = p[len];
+//							
+//							if (!this.settings.isPrimVal(current)) {
+//								methodTypes.add(current);
+//							}
+//						}	
+//					}
+//				}
+//				
+//				//checking for the return type
+//				String returnType = path[1];
+//				
+//				if (returnType.length() != 0 && !this.settings.isPrimVal(returnType)) {
+//					String [] returnPath = returnType.split("<");
+//					String returnVal = returnPath[0];
+//					
+//					if (returnVal.contains("/")) {
+//						returnPath = returnVal.split("/");
+//						int lastIndex = returnPath.length - 1;
+//						String current = returnPath[lastIndex];
+//						
+//						if (!this.settings.isPrimVal(current)) {
+//							//System.out.println(current);
+//							methodTypes.add(current);
+//						}
+//					}
+//				}				
+//			} else {
 				String type = m.desc;
+				System.out.println(type);
+
 				String[] path = type.split("\\)");
 				String params = path[0];
 				String [] pathParam = params.split("\\(");
@@ -276,7 +296,7 @@ public class ClassInfo {
 					}
 				}
 			}
-		}
+//		}
 		
 		for (String m : methodTypes) {
 			if (this.methodAppear.containsKey(m)) {

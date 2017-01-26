@@ -26,12 +26,14 @@ public class GVDependencies {
 		
 		for(String className : this.classNames) {
 			
+			System.out.println("Interfaces");
 			//printing interfaces that are implemented for each class
 			ClassInfo ci = g.get(className);
 			for(String interfacez : ci.getInterfaces()) {
 				System.out.println("\t" + className + " -> " + interfacez + " [arrowhead=\"onormal\", style=\"dashed\"];");
 			}
 			
+			System.out.println("Extends");
 			//printing classes that this class extends
 			String extendz = ci.getExtends();
 			System.out.println("\t" + className + " -> " + extendz + " [arrowhead=\"onormal\"];\n");
@@ -41,7 +43,7 @@ public class GVDependencies {
 	public void printAssociations() {
 		HashMap<String,ClassInfo> g = this.graph.getGraph();
 		HashSet<String> doubleArrow = new HashSet<>();
-	
+		System.out.println("associations");
 		//go through all of the classes determining associations and dependencies
 		for(String className : this.classNames) {
 			ClassInfo ci = g.get(className);
@@ -89,7 +91,7 @@ public class GVDependencies {
 	public void printDependencies() {
 		HashMap<String,ClassInfo> g = this.graph.getGraph();
 		HashSet<String> doubleArrow = new HashSet<>();
-	
+		System.out.println("dependencies");
 		//go through all of the classes determining associations and dependencies
 		for(String className : this.classNames) {
 			ClassInfo ci = g.get(className);

@@ -18,6 +18,7 @@ public class GVManager {
 		this.field = new GVField();
 		this.method = new GVMethod();
 		this.depends = new GVDependencies(graph);
+		this.graph = graph;
 	}
 	
 	public void displayGVCode(ArrayList<ClassInfo> classes) {
@@ -28,7 +29,7 @@ public class GVManager {
 		
 		
 		
-		for(ClassInfo c : classes) {
+		for(ClassInfo c : this.graph.getClasses()) {
 			List<MethodNode> methods = c.getMethods();
 			List<FieldNode> fields = c.getFields();
 			

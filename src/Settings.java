@@ -7,7 +7,7 @@ public class Settings {
   boolean recursive;
   private final String [] primVals = new String[] {"boolean", "int", "char", "byte" ,"short", "int",
 			"long", "float", "double", "Object", "Ojbect[]", "Z", "B", "S", "I", "J", "F",
-			"D", "C", "L", "[Z", "[B", "[S", "[I", "[J", "[F", "[D", "[C", "[L", "V", "String"};
+			"D", "C", "L", "[Z", "[B", "[S", "[I", "[J", "[F", "[D", "[C", "[L", "V", "String", "java/lang/Object"};
   private final HashSet<String> prims = new HashSet<String>(Arrays.asList(primVals));
 
   private volatile static Settings settings;
