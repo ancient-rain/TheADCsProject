@@ -30,14 +30,14 @@ public class GVDependencies {
 			ClassInfo ci = g.get(className);
 			for(String interfacez : ci.getInterfaces()) {
 				if (!settings.isBlacklisted(interfacez)) {
-					System.out.println("\t<" + className + "> -> <" + interfacez + "> [arrowhead=\"onormal\", style=\"dashed\"];");
+					System.out.println("\t<" + className + "> -> <" + interfacez + "> [arrowhead=\"onormal\", style=\"dashed\", color=\"" + ci.getColor() + "\"];");
 				}
 			}
 			
 			//printing classes that this class extends
 			String extendz = ci.getExtends();
 			if(!this.settings.isPrimVal(extendz) && !settings.isBlacklisted(extendz)) {
-				System.out.println("\t<" + className + "> -> <" + extendz + "> [arrowhead=\"onormal\"];\n");
+				System.out.println("\t<" + className + "> -> <" + extendz + "> [arrowhead=\"onormal\", color=\"" + ci.getColor() + "\"];\n");
 			}
 		}
 	}
@@ -74,15 +74,15 @@ public class GVDependencies {
 							if(!(doubleArrow.contains(appended1) || doubleArrow.contains(appended2))) {
 								doubleArrow.add(appended1);
 								doubleArrow.add(appended2);
-								System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", arrowtail=\"vee\", dir=\"both\"];");
+								System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", arrowtail=\"vee\", dir=\"both\", color=\"" + ci.getColor() + "\"];");
 							}
 						}
 					} else {
 					
 						if (entry.getValue() > 1) {
-							System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", headlabel=\"1..*\"];");
+							System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", headlabel=\"1..*\", color=\"" + ci.getColor() + "\"];");
 						} else {
-							System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\"];");
+							System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", color=\"" + ci.getColor() + "\"];");
 						}
 					}
 				}
@@ -123,15 +123,15 @@ public class GVDependencies {
 								if(!(doubleArrow.contains(appended1) || doubleArrow.contains(appended2))) {
 									doubleArrow.add(appended1);
 									doubleArrow.add(appended2);
-									System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", arrowtail=\"vee\", dir=\"both\"];");
+									System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", arrowtail=\"vee\", dir=\"both\", color=\"" + ci.getColor() + "\"];");
 								}	
 							}
 						} else {
 				
 							if (entry.getValue() > 1) {
-								System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", headlabel=\"1..*\"];");
+								System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", headlabel=\"1..*\", color=\"" + ci.getColor() + "\"];");
 							} else {
-								System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\"];");
+								System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", color=\"" + ci.getColor() + "\"];");
 							}
 						}
 					}	
@@ -139,52 +139,4 @@ public class GVDependencies {
 			}
 		}
 	}
-
-//		} else { // ======================= IF THERE ARE NO ASSOCIATIONS!! ========================
-//
-//			HashMap<String, HashMap<String,Integer>> numAppear = new HashMap<String, HashMap<String, Integer>>();
-//			
-//			for (Map.Entry<String, List<MethodNode>> mapEntry: this.depend.entrySet()) {
-//				
-//				List<MethodNode> methods = mapEntry.getValue();
-//				String className = mapEntry.getKey();
-//				HashMap<String, Integer> methodAppear = new HashMap<String, Integer>();
-//				
-//
-//				numAppear.put(className, methodAppear);
-//			}
-//			
-//			for (Map.Entry<String, HashMap<String, Integer>> entry: numAppear.entrySet()) {
-//				String className = entry.getKey();
-//				HashMap<String, Integer> field = entry.getValue();
-//				for(Map.Entry<String, Integer> val: field.entrySet()) {
-//					String pointTo = val.getKey();
-//					int num = val.getValue();
-//					
-//					String[] trunk = pointTo.split(";");
-//					pointTo = trunk[0];
-//					
-//					if (num > 1) {
-//						System.out.println("\t" + className + " -> " + pointTo + " [arrowhead=\"vee\", style=\"dashed\", headlabel=\"1..*\"];");
-//					} else {
-//						System.out.println("\t" + className + " -> " + pointTo + " [arrowhead=\"vee\", style=\"dashed\"];");
-//					}
-//				}
-//			}
-//	}
-//}
-//	public void addRels(ClassInfo c) {
-//		String name = c.getClassName();
-//		
-//		this.assoc.put(name, c.getFields());
-//		this.depend.put(name, c.getMethods());
-//	}
-//	
-//	public void checkCollection(String typeName) {
-//		if(!this.prims.contains(typeName)) {
-//			DesignParser parse = new DesignParser();
-//			ClassInfo info = new ClassInfo(parse.parse(typeName));
-//		}
-//						
-//	}
 }

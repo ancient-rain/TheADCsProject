@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -16,10 +15,9 @@ public class ClassInfo {
 	String className;
 	String sterotype;
 	String extendz;
+	String color;
 	
 	List<String> implementz;
-//	List<String> inDependz;
-//	List<String> inAssocz;
 	
 	HashMap<String, Integer> fieldAppear;
 	HashMap<String, Integer> methodAppear;
@@ -33,9 +31,8 @@ public class ClassInfo {
 		this.implementz = this.getInterfacez();
 		this.fieldAppear = new HashMap<>(); 
 		this.methodAppear = new HashMap<>();
-//		this.inDependz = new ArrayList<>();
-//		this.inAssocz = new ArrayList<>();
 		this.settings = Settings.getInstance();
+		this.color = "black";
 		this.populateFieldAppear();
 		this.populateMethodAppear();
 	}
@@ -119,6 +116,14 @@ public class ClassInfo {
 		return this.sterotype;
 	}
 	
+	public String getColor() {
+		return this.color;
+	}
+	
+	public void setColor(String c) {
+		this.color = c;
+	}
+	
 	public void setSterotype(String s) {
 		this.sterotype = s;
 	}
@@ -137,6 +142,10 @@ public class ClassInfo {
 	
 	public boolean isInterface() {
 		return (this.classNode.access & Opcodes.ACC_INTERFACE) > 0;
+	}
+	
+	public boolean isAbsract() {
+		return (this.classNode.access & Opcodes.ACC_ABSTRACT) > 0;
 	}
 	
 	public boolean hasFields() {

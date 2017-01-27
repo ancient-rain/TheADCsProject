@@ -1,11 +1,9 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Properties;
 
 public class Settings {
@@ -151,7 +149,7 @@ public class Settings {
 	  String classes = prop.getProperty("test");
 	  String blacklist = prop.getProperty("blacklist");
 	  String synthetic = prop.getProperty("synthetic");
-	  System.out.println(recursive);
+
 	  if (recursive.equals("true")) {
 		  this.setRecursiveTrue();
 	  } else {

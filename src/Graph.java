@@ -3,9 +3,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.objectweb.asm.tree.FieldNode;
-import org.objectweb.asm.tree.MethodNode;
-
 public class Graph {
 	ArrayList<ClassInfo> classes;
 	HashMap<String, ClassInfo> graph;
@@ -19,7 +16,7 @@ public class Graph {
 		DesignParser p = new DesignParser();
 		Settings settings = Settings.getInstance();
 		int stop = this.classes.size();
-		System.out.println(settings.getRecursive());
+
 		if (settings.getRecursive()) {
 			for (int i = 0; i < stop; i++) {
 				ClassInfo ci = this.classes.get(i);
@@ -68,31 +65,6 @@ public class Graph {
 //				System.out.println(ci.getClassName());
 //			}
 		}
-		
-		
-//		for(ClassInfo ci : clazz) {
-//			// what do you point too?
-//			HashMap<String, Integer> fields = ci.getFieldAppear();
-//			//fields
-//			for (Map.Entry<String, Integer> entry : fields.entrySet()) {
-//				String fieldType = entry.getKey();
-//				if (this.graph.containsKey(fieldType)) {
-////					ClassInfo inAssoc = this.graph.get(fieldType);
-////					inAssoc.addInAssoc(fieldType);
-//				}
-//			}
-//			
-//			HashMap<String, Integer> methods = ci.getMethodAppear();
-//			//methods
-//			for (Map.Entry<String, Integer> entry : methods.entrySet()) {
-//				String methodType = entry.getKey();
-//				if (this.graph.containsKey(methodType)) {
-////					ClassInfo inAssoc = this.graph.get(methodType);
-////					inAssoc.addInAssoc(methodType);
-//				}
-//			}
-//			
-//		}
 	}
 	
 	public void populateGraph(List<ClassInfo> clazz) {
@@ -115,16 +87,6 @@ public class Graph {
 		ClassInfo clazz = this.graph.get(name);
 		return clazz.getFieldAppear();
 	}
-	
-//	public List<String> getInwardDepends(String name) {
-//		ClassInfo clazz = this.graph.get(name);
-//		return clazz.getInDepend();	
-//	}
-	
-//	public List<String> getInwardAssoc(String name) {
-//		ClassInfo clazz = this.graph.get(name);
-//		return clazz.getInAssoc();	
-//	}
 
 	public HashMap<String, ClassInfo> getGraph() {
 		return this.graph;
