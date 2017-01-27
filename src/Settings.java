@@ -93,19 +93,19 @@ public class Settings {
 	  this.synthetic = !this.synthetic;
   }
   
-  private void setRecursiveTrue() {
+  public void setRecursiveTrue() {
 	  this.recursive = true;
   }
   
-  private void setSytheticTrue() {
+  public void setSyntheticTrue() {
 	  this.synthetic = true;
   }
   
-  private void setRecursiveFalse() {
+  public void setRecursiveFalse() {
 	  this.recursive = false;
   }
   
-  private void setSyntheticFalse() {
+  public void setSyntheticFalse() {
 	  this.synthetic = false;
   }
   
@@ -157,7 +157,7 @@ public class Settings {
 	  }
 	  
 	  if (synthetic.equals("true")) {
-		  this.setSytheticTrue();
+		  this.setSyntheticTrue();
 	  } else {
 		  this.setSyntheticFalse();
 	  }
@@ -170,18 +170,25 @@ public class Settings {
 	  
 	  String[] classList = classes.split("\\s+");
 	  
+	  this.classes = new ArrayList<>();
 	  for(String s: classList) {
 		  this.addClasses(s);
-//			  System.out.println(s);
+		  //System.out.println(s);
 	  }
 	  
 	  String[] blackList = blacklist.split("\\s+");
 	  
+	  this.blacklist = new ArrayList<>();
+	  this.blackListClasses = new HashSet<>();
+	  //int index = 0;
 	  for(String s : blackList) {
+		  
 		  this.blacklist.add(s); // array
-		  this.blackListClasses.add(s); // hashset
+		  this.blackListClasses.add(s); // HashSet
+		  //System.out.println(this.blacklist.get(index));
+		  //index++;
 	  }
-	  	  
+	  
 	  
   }
 

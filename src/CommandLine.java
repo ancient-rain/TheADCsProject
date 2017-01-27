@@ -44,6 +44,7 @@ public class CommandLine implements ISubject {
 			}
 		}
 		boolean flags = true;
+		
 		for (int i = 0; i < args.length; i++) { //flags must be initialized before java files
 			String s = args[i];
 			
@@ -56,9 +57,9 @@ public class CommandLine implements ISubject {
 				String firstTwo = s.substring(0, 2);
 				
 				if (firstTwo.equals("-r")) {
-					settings.setRecursive();
+					settings.setRecursiveTrue();
 				} else if (firstTwo.equals("-s")) {
-					settings.setSynthetic();
+					settings.setSyntheticTrue();
 				} else if (firstTwo.equals("-u")){
 					i++;
 					settings.setConfig(args[i]);
@@ -68,11 +69,18 @@ public class CommandLine implements ISubject {
 				}
 			}
 		}
-		
-		String[] classes = new String[tempArgs.size()];
-		
-		classes = tempArgs.toArray(classes);
-
+		String[] classes = null;
+		if (!tempArgs.isEmpty()) {
+			classes = new String[tempArgs.size()];
+			
+			classes = tempArgs.toArray(classes);
+		} else {
+			ArrayList<String> temp = settings.getClasses();
+			classes = new String[temp.size()];
+			classes = temp.toArray(classes);
+			//System.out.println(temp.get(0) + " " + classes[0]);
+		}
+		//System.out.println(settings.getRecursive());
 		this.notify(classes, genDiagram);		
 	}
 }
