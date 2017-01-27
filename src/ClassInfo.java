@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -209,102 +210,37 @@ public class ClassInfo {
 		
 		//getting the parameters of each of the methods
 		for (MethodNode m: methods) {
-//			if (m.signature != null) {
-//				String temp = m.desc;
-//				System.out.println(temp);
-//				String type = m.signature;
-//				System.out.println(type);
-//				String[] path = type.split("\\)");
-//				String params = path[0];
-//				String [] pathParam = params.split("\\(");
-//				
-//				if (pathParam.length != 0) {
-//					int lastIndex = pathParam.length - 1;
-//					params = pathParam[lastIndex];
-//					pathParam = params.split("<");
-//					
-//					for (String s : pathParam) {
-//						if (s.contains("/")) {
-//							String [] p = s.split("/");
-//							int len = p.length - 1;
-//							String current = p[len];
-//							
-//							if (!this.settings.isPrimVal(current)) {
-//								methodTypes.add(current);
-//							}
-//						}	
-//					}
-//				}
-//				
-//				//checking for the return type
-//				String returnType = path[1];
-//				
-//				if (returnType.length() != 0 && !this.settings.isPrimVal(returnType)) {
-//					String [] returnPath = returnType.split("<");
-//					String returnVal = returnPath[0];
-//					
-//					if (returnVal.contains("/")) {
-//						returnPath = returnVal.split("/");
-//						int lastIndex = returnPath.length - 1;
-//						String current = returnPath[lastIndex];
-//						
-//						if (!this.settings.isPrimVal(current)) {
-//							//System.out.println(current);
-//							methodTypes.add(current);
-//						}
-//					}
-//				}				
-//			} else {
-				String type = m.desc;
-				System.out.println(type);
 
-				String[] path = type.split("\\)");
-				String params = path[0];
-				String [] pathParam = params.split("\\(");
+			String type = m.desc;
+			//System.out.println(type);
 				
-				//if the parameter is not null
-				if (pathParam.length != 0) {
-					int lastIndex = pathParam.length - 1;
-					params = pathParam[lastIndex];
-					pathParam = params.split(";");
-
-					for (String s : pathParam) {
-						if (s.contains("/")) {
-							String [] p = s.split("/");
-							int len = p.length - 1;
-							String current = p[len];
-							
-							if (!this.settings.isPrimVal(current)) {
-								methodTypes.add(current);
-							}
-						}
+			Type[] methodType = Type.getArgumentTypes(type);
+				
+			for (Type t: methodType) {
+				String temp = t.getDescriptor();
+				String name = temp;
+				if(!this.settings.isPrimVal(temp)) {
+					//System.out.println(temp);
+					if(temp.charAt(0) == '[') {
+						name = temp.substring(2, temp.length() - 1);
+					} else if(temp.charAt(0) == 'L') {
+						name = temp.substring(1, temp.length() - 1);
 					}
-				}
-				
-				//checking for the return type
-				String returnType = path[1];
-				
-				if (returnType.length() != 0 && !this.settings.isPrimVal(returnType)) {
-					String [] returnPath = returnType.split("/");
-					int lastIndex = returnPath.length - 1;
-					String returnVal = returnPath[lastIndex];
-					returnPath = returnVal.split(";");
-					String current = returnPath[0];
-					
-					if (!this.settings.isPrimVal(current)) {
-						methodTypes.add(current);
-					}
+					methodTypes.add(name);
 				}
 			}
-//		}
-		
-		for (String m : methodTypes) {
-			if (this.methodAppear.containsKey(m)) {
-				int appear = this.methodAppear.get(m);
-				this.methodAppear.put(m, appear++);
-			} else {
-				this.methodAppear.put(m, 1);
+			
+						
+			for (String m1 : methodTypes) {
+				if(!settings.isPrimVal(m1)) {
+					if (this.methodAppear.containsKey(m1)) {
+						int appear = this.methodAppear.get(m1);
+						this.methodAppear.put(m1, appear++);
+					} else {
+						this.methodAppear.put(m1, 1);
+					}
+				}
 			}
 		}
-	}	
+	}
 }

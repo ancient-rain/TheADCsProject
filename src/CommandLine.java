@@ -36,20 +36,37 @@ public class CommandLine implements ISubject {
 		Settings settings = Settings.getInstance();
 		ArrayList<String> tempArgs = new ArrayList<>();
 		
+		if (args.length == 0) {
+			ArrayList<String> classes = settings.getClasses();
+			args = new String[classes.size()];
+			for (int i = 0; i < classes.size(); i++) {
+				args[i] = classes.get(i);
+			}
+		}
+		boolean flags = true;
 		for (int i = 0; i < args.length; i++) { //flags must be initialized before java files
 			String s = args[i];
 			
 			if (s.charAt(0) != '-') {
+				if(i == 0) {
+					flags = false;
+				}
 				tempArgs.add(args[i]);
+			} else if(flags){
+				String firstTwo = s.substring(0, 2);
+				
+				if (firstTwo.equals("-r")) {
+					settings.setRecursive();
+				} else if (firstTwo.equals("-s")) {
+					settings.setSynthetic();
+				} else if (firstTwo.equals("-u")){
+					i++;
+					settings.setConfig(args[i]);
+				} else {
+					settings.setCommandFlags();
+					settings.addDetectors(s);
+				}
 			}
-			
-			String firstTwo = s.substring(0, 2);
-			
-			if (firstTwo.equals("-r")) {
-				settings.setRecursive();
-			} else {
-				settings.addDetectors(s);
-			}			
 		}
 		
 		String[] classes = new String[tempArgs.size()];

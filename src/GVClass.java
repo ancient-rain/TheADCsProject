@@ -14,7 +14,7 @@ public class GVClass {
 		List<FieldNode> fields = c.getFields();
 		String name = c.getClassName();
 		
-		System.out.println("\t" + name + " [");
+		System.out.println("\t<" + name + "> [");
 		System.out.println("\t\tshape = \"record\",");
 
 		System.out.print("\t\tlabel = <{");

@@ -11,6 +11,7 @@ public class GVMethod {
 	}
 	
 	public void printMethods(List<MethodNode> methods) {
+		Settings settings = Settings.getInstance();
 		for (MethodNode m : methods) {
 			int access = m.access;
 			String mName = m.name;
@@ -18,25 +19,27 @@ public class GVMethod {
 			String returnString = returnValue.getClassName();
 			String[] path = returnString.split("\\.");
 			
-			if ((access & Opcodes.ACC_PUBLIC) > 0) {
-				System.out.print("+ ");
-			} else if ((access & Opcodes.ACC_PROTECTED) > 0) {
-				System.out.print("# ");
-			} else {
-				System.out.print("- ");
+			if(!((access & Opcodes.ACC_SYNTHETIC) > 0 && (settings.getSynthetic()))) {
+				
+				if ((access & Opcodes.ACC_PUBLIC) > 0) {
+					System.out.print("+ ");
+				} else if ((access & Opcodes.ACC_PROTECTED) > 0) {
+					System.out.print("# ");
+				} else {
+					System.out.print("- ");
+				}
+				
+				if (mName.equals("<init>")) {
+					mName = "Constructor";
+				}
+				
+				if (mName.equals("<clinit>")) {
+					mName = "Constructor";
+				}
+				
+				System.out.print(mName + ": " + path[path.length - 1] + "<BR ALIGN=\"LEFT\"/>");
 			}
-			
-			if (mName.equals("<init>")) {
-				mName = "Constructor";
-			}
-			
-			if (mName.equals("<clinit>")) {
-				mName = "Constructor";
-			}
-			
-			System.out.print(mName + ": " + path[path.length - 1] + "<BR ALIGN=\"LEFT\"/>");
 		}
-		
 		System.out.print("}>\n\t];\n\n");
 	}
 }

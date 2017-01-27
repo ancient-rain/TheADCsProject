@@ -19,7 +19,7 @@ public class Graph {
 		DesignParser p = new DesignParser();
 		Settings settings = Settings.getInstance();
 		int stop = this.classes.size();
-		
+		System.out.println(settings.getRecursive());
 		if (settings.getRecursive()) {
 			for (int i = 0; i < stop; i++) {
 				ClassInfo ci = this.classes.get(i);
@@ -30,7 +30,8 @@ public class Graph {
 				
 				for (Map.Entry<String, Integer> entry : fields.entrySet()) {
 					String name = entry.getKey();
-					if(!this.graph.containsKey(name) && !settings.isPrimVal(name)) {
+					if(!this.graph.containsKey(name) && !settings.isPrimVal(name) && !settings.isBlacklisted(name)) {
+						//System.out.println(name);
 						ClassInfo c = new ClassInfo(p.parse(name));
 						this.graph.put(name, c);
 						this.classes.add(c);
@@ -39,8 +40,8 @@ public class Graph {
 				
 				for (Map.Entry<String, Integer> entry : methods.entrySet()) {
 					String name = entry.getKey();
-					if(!this.graph.containsKey(name) && !settings.isPrimVal(name)) {
-						System.out.println(name);
+					if(!this.graph.containsKey(name) && !settings.isPrimVal(name) && !settings.isBlacklisted(name)) {
+						//System.out.println(name);
 						ClassInfo c = new ClassInfo(p.parse(name));
 						this.graph.put(name, c);
 						this.classes.add(c);
@@ -48,101 +49,24 @@ public class Graph {
 				}
 				
 				for (String name: interfaces) {
-					if (!this.graph.containsKey(name)) {
+					if (!this.graph.containsKey(name) && !settings.isBlacklisted(name)) {
 						ClassInfo c = new ClassInfo(p.parse(name));
 						this.graph.put(name, c);
 						this.classes.add(c);
 					}
 				}
 				
-				if (!this.graph.containsKey(extend)) {
+				if (!this.graph.containsKey(extend) && !settings.isBlacklisted(extend)) {
 					ClassInfo c = new ClassInfo(p.parse(extend));
 					this.graph.put(extend, c);
 					this.classes.add(c);
 				}
 				
-				
-				
-				
-				
-				
-//				for (FieldNode f: fields) {
-//					if (f.signature != null) {
-//						//System.out.println(f.signature + " signature");
-//						String className = f.signature;
-//						String[] path = className.split(";");
-//						className = path[0];
-////						path = fieldPath.split("/");
-////						int lastIndex = path.length - 1;
-////						String className = path[lastIndex];
-////						System.out.println(className + " " + fieldPath);
-//
-//						if (!settings.isPrimVal(className)) {
-//							System.out.println("primVal Check 1 " + className);
-//							if (!this.graph.containsKey(className)) {
-//								ClassInfo c = new ClassInfo(p.parse(className));
-//								this.graph.put(className, c);
-//								this.classes.add(c);
-//							}
-//						}
-//					} else if (f.desc.charAt(0) == '[') {
-//						
-//						String className = f.desc;
-//						String[] path = className.split("L");
-//						className = path[1];
-//						path = className.split(";");
-//						className = path[0];
-//						//System.out.println(className + " bracket");
-////						String[] path = fieldPath.split(";");
-////						fieldPath = path[0];
-////						path = fieldPath.split("/");
-////						int lastIndex = path.length - 1;
-////						String className = path[lastIndex];
-////						System.out.println(className + " " + fieldPath);
-//
-//						if (!settings.isPrimVal(className)) {
-//							System.out.println("primVal Check 2" + className);
-//
-//							if (!this.graph.containsKey(className)) {
-//								ClassInfo c = new ClassInfo(p.parse(className));
-//								this.graph.put(className, c);
-//								this.classes.add(c);
-//							}
-//						}
-//					} else {
-//						//System.out.println(f.desc + " normal");
-//						String className = f.desc;
-//						if (className.charAt(0) == 'L') {
-//							className = className.substring(1);
-//						}
-//						String[] path = className.split(";");
-//						className = path[0];
-////						path = fieldPath.split("/");
-////						int lastIndex = path.length - 1;
-////						String className = path[lastIndex];
-////						System.out.println(className + " " + fieldPath);
-//				
-//						if (!settings.isPrimVal(className)) {
-//							System.out.println("primVal Check 3" + className);
-//
-//							System.out.println();
-//							if (!this.graph.containsKey(className)) {
-//								ClassInfo c = new ClassInfo(p.parse(className));
-//								this.graph.put(className, c);
-//								this.classes.add(c);
-//							}
-//						}
-//					}
-//				}
-				
-//				for (MethodNode m: methods) {
-//					
-//				}
 			}
 			
-			for (ClassInfo ci : this.classes){
-				System.out.println(ci.getClassName());
-			}
+//			for (ClassInfo ci : this.classes){
+//				System.out.println(ci.getClassName());
+//			}
 		}
 		
 		
