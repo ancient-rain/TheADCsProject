@@ -172,6 +172,7 @@ public class Settings {
 	  
 	  this.classes = new ArrayList<>();
 	  for(String s: classList) {
+		  s.trim();
 		  this.addClasses(s);
 		  //System.out.println(s);
 	  }

@@ -20,7 +20,7 @@ public class GVClass {
 		String color = c.getColor();
 		
 		if (!color.equals("black")) {
-			System.out.println("\t\tcolor = \"" + color + "record\",");
+			System.out.println("\t\tcolor = \"" + color + "\",");
 		}
 
 		System.out.print("\t\tlabel = <{");

@@ -1,15 +1,23 @@
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class DetectorFactory {
-
-	HashMap<String, IDetector> detectors;
+	
+	Graph graph;
 	
 	public DetectorFactory(Graph g) {
-		this.detectors = new HashMap<String, IDetector>();
-//		this.detectors.put("-coi", new CoIDetector(g));
+		this.graph = g;
 	}
 	
-	public void build() {
+	public ArrayList<IDetector> build(Graph g, ArrayList<String> detectors) {
+		ArrayList<IDetector> detects = new ArrayList<>();
 		
+		for (String s: detectors) {
+			if (s.equals("-coi")) {
+				IDetector d = new CoIDetector(this.graph);
+				detects.add(d);
+			}
+		}
+		
+		return detects;
 	}
 }

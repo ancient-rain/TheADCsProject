@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -227,6 +226,7 @@ public class ClassInfo {
 			Type[] methodType = Type.getArgumentTypes(type);
 				
 			for (Type t: methodType) {
+				
 				String temp = t.getDescriptor();
 				String name = temp;
 				if(!this.settings.isPrimVal(temp)) {
