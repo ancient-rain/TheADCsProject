@@ -1,14 +1,13 @@
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.objectweb.asm.tree.AnnotationNode;
-import org.objectweb.asm.tree.MethodNode;
-
 public class CoIDetector implements IDetector {
+	
+	IDetector detector;
 	Graph graph;
 	
-	public CoIDetector(Graph g) {
+	public CoIDetector(IDetector d, Graph g) {
+		this.detector = d;
 		this.graph = g;
 	}
 
@@ -21,10 +20,8 @@ public class CoIDetector implements IDetector {
 		for (Map.Entry<String, ClassInfo> entry: classes.entrySet()) {
 			ClassInfo ci = entry.getValue();
 			String name = entry.getKey();
-			//System.out.println("in detect looking at classes");
 			if (!(ci.isAbsract() && ci.isInterface())) {
 				String extendz = ci.getExtends();
-				//System.out.println("its not an interface or an abstract");
 				if (!settings.isPrimVal(extendz)) {
 					
 					DesignParser p = new DesignParser();
@@ -52,8 +49,6 @@ public class CoIDetector implements IDetector {
 //						}
 //					}
 				}
-			}
-		}			
 	}
 
 }

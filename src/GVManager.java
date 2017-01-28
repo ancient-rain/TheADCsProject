@@ -22,14 +22,7 @@ public class GVManager {
 	}
 	
 	public void displayGVCode(ArrayList<ClassInfo> classes) {
-		Settings settings = Settings.getInstance();
-		DetectorFactory factory = new DetectorFactory(this.graph);
 		
-		ArrayList<IDetector> detectors = factory.build(settings.getDetectors());
-		
-		for(IDetector d: detectors) {
-			d.detect();
-		}
 		
 		System.out.println("digraph uml_diagram {");
 		System.out.println("\trankdir = BT;\n");
