@@ -16,6 +16,12 @@ public class GVClass {
 		
 		System.out.println("\t<" + name + "> [");
 		System.out.println("\t\tshape = \"record\",");
+		
+		String color = c.getColor();
+		
+		if (!color.equals("black")) {
+			System.out.println("\t\tcolor = \"" + color + "record\",");
+		}
 
 		System.out.print("\t\tlabel = <{");
 		
