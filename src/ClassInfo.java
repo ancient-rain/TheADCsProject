@@ -227,6 +227,7 @@ public class ClassInfo {
 			Type[] methodType = Type.getArgumentTypes(type);
 				
 			for (Type t: methodType) {
+				
 				String temp = t.getDescriptor();
 				String name = temp;
 				if(!this.settings.isPrimVal(temp)) {
