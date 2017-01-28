@@ -18,8 +18,10 @@ public class DetectorFactory {
 		
 		for (String s: detectors) {
 			if(s.equals("-coi")) {
-				System.out.println("building coi detector");
+				//System.out.println("building coi detector");
 				d.add(new CoIDetector(this.graph));
+			} else if(s.equals("-sg")) {
+				d.add(new SingletonDetector(this.graph));
 			}
 		}
 		return d;

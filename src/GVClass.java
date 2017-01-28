@@ -20,15 +20,17 @@ public class GVClass {
 		String color = c.getColor();
 		
 		if (!color.equals("black")) {
-			System.out.println("\t\tcolor = \"" + color + "record\",");
+			System.out.println("\t\tcolor = \"" + color + "\",");
 		}
 
 		System.out.print("\t\tlabel = <{");
 		
 		if (c.isInterface()) {
-			System.out.print("interface<BR /><I>" + c.getClassName() + "</I>");
+			System.out.print("&lt;&lt;interface&gt;&gt;<BR /><I>" + c.getClassName() + "</I>");
+		} else if (c.getSterotype() != null) {
+			System.out.print(c.getClassName() + "<BR />&lt;&lt;" + c.getSterotype() + "&gt;&gt;");
 		} else {
-			System.out.print(c.getClassName());
+			System.out.println(c.getClassName());
 		}
 				
 		if (!fields.isEmpty() || !methods.isEmpty()) {
