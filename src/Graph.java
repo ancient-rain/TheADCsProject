@@ -53,7 +53,7 @@ public class Graph {
 					}
 				}
 				
-				if (!this.graph.containsKey(extend) && !settings.isBlacklisted(extend)) {
+				if (!this.graph.containsKey(extend) && !settings.isPrimVal(extend) &&!settings.isBlacklisted(extend)) {
 					ClassInfo c = new ClassInfo(p.parse(extend));
 					this.graph.put(extend, c);
 					this.classes.add(c);

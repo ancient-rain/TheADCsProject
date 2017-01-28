@@ -56,7 +56,7 @@ public class GVDependencies {
 				String pointsTo = entry.getKey();
 				
 				//check to see if the field is not a primitive type
-				if (!this.settings.isPrimVal(pointsTo) && !this.settings.isBlacklisted(pointsTo)) {
+				if (!this.settings.isPrimVal(pointsTo)) {
 				
 					//check to see if one of the associations is in graph 
 					//of classes being analyzed 
@@ -74,15 +74,21 @@ public class GVDependencies {
 							if(!(doubleArrow.contains(appended1) || doubleArrow.contains(appended2))) {
 								doubleArrow.add(appended1);
 								doubleArrow.add(appended2);
-								System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", arrowtail=\"vee\", dir=\"both\", color=\"" + ci.getColor() + "\"];");
+								System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", style=\"dashed\", arrowtail=\"vee\", dir=\"both\", color=\"" + ci.getColor() + "\"];");
+							}
+						} else {
+							if (entry.getValue() > 1) {
+								System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", style=\"dashed\", headlabel=\"1..*\", color=\"" + ci.getColor() + "\"];");
+							} else {
+								System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", style=\"dashed\", color=\"" + ci.getColor() + "\"];");
 							}
 						}
 					} else {
 					
 						if (entry.getValue() > 1) {
-							System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", headlabel=\"1..*\", color=\"" + ci.getColor() + "\"];");
+							System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", style=\"dashed\", headlabel=\"1..*\", color=\"" + ci.getColor() + "\"];");
 						} else {
-							System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", color=\"" + ci.getColor() + "\"];");
+							System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", style=\"dashed\", color=\"" + ci.getColor() + "\"];");
 						}
 					}
 				}
@@ -125,6 +131,12 @@ public class GVDependencies {
 									doubleArrow.add(appended2);
 									System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", arrowtail=\"vee\", dir=\"both\", color=\"" + ci.getColor() + "\"];");
 								}	
+							} else {
+								if (entry.getValue() > 1) {
+									System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", headlabel=\"1..*\", color=\"" + ci.getColor() + "\"];");
+								} else {
+									System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", color=\"" + ci.getColor() + "\"];");
+								}
 							}
 						} else {
 				

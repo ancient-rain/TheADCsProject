@@ -147,7 +147,7 @@ public class Settings {
 	  String flags = prop.getProperty("flags");
 	  String recursive = prop.getProperty("recursive");
 	  String classes = prop.getProperty("test");
-	  String blacklist = prop.getProperty("blacklist");
+	  String bL = prop.getProperty("blacklist");
 	  String synthetic = prop.getProperty("synthetic");
 
 	  if (recursive.equals("true")) {
@@ -177,17 +177,18 @@ public class Settings {
 		  //System.out.println(s);
 	  }
 	  
-	  String[] blackList = blacklist.split("\\s+");
+	  String[] blackList = bL.split("\\s+");
 	  
 	  this.blacklist = new ArrayList<>();
 	  this.blackListClasses = new HashSet<>();
 	  //int index = 0;
 	  for(String s : blackList) {
-		  
-		  this.blacklist.add(s); // array
-		  this.blackListClasses.add(s); // HashSet
-		  //System.out.println(this.blacklist.get(index));
-		  //index++;
+		  if (!s.equals("")) {
+			  this.blacklist.add(s); // array
+			  this.blackListClasses.add(s); // HashSet
+			  //System.out.println(this.blacklist.get(index));
+			  //index++;
+		  }
 	  }
 	  
 	  
