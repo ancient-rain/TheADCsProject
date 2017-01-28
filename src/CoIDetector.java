@@ -13,41 +13,42 @@ public class CoIDetector implements IDetector {
 
 	@Override
 	public void detect() {
+		//System.out.println("in Detect");
 		HashMap<String, ClassInfo> classes = this.graph.getGraph();
 		Settings settings = Settings.getInstance();
 		
 		for (Map.Entry<String, ClassInfo> entry: classes.entrySet()) {
 			ClassInfo ci = entry.getValue();
 			String name = entry.getKey();
-			
 			if (!(ci.isAbsract() && ci.isInterface())) {
 				String extendz = ci.getExtends();
-				
 				if (!settings.isPrimVal(extendz)) {
 					
-					if (classes.containsKey(extendz)) {
-						ClassInfo superC = classes.get(extendz);
-						
-						if (!(superC.isAbsract())) {
-							HashMap<String, Integer> fields = ci.getFieldAppear();
-							boolean allPrims = true;
-							
-							for (Map.Entry<String, Integer> f: fields.entrySet()) {
-								String field = f.getKey();
-								if (!settings.isPrimVal(field)) {
-									allPrims = false;
-									break;
-								}
-							}
-							
-							if (allPrims) {
-								ci.setColor("orange");
-							}
-						}
+					DesignParser p = new DesignParser();
+					ClassInfo clazz = new ClassInfo(p.parse(extendz));
+					
+					if (clazz.isAbsract()) {
+						ci.setColor("orange");
 					}
+					
+					
+					
+//					System.out.println("its not a primitive type");
+//					List<MethodNode> methods = ci.getMethods();
+//					
+//					for (MethodNode method : methods) {
+//					
+//						//System.out.println(method.visibleAnnotations);
+//						if (method.visibleAnnotations != null) {
+//						
+//							System.out.println("has visible annotations");
+//							@SuppressWarnings("unchecked")
+//							List<AnnotationNode> aNodes = method.visibleAnnotations;
+//							AnnotationNode aNode = aNodes.get(0);
+//							System.out.println(aNode.desc);	
+//						}
+//					}
 				}
-			}			
-		}
 	}
 
 }

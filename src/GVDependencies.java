@@ -60,7 +60,7 @@ public class GVDependencies {
 				
 					//check to see if one of the associations is in graph 
 					//of classes being analyzed 
-					if(g.containsKey(pointsTo)) {
+					if(g.containsKey(pointsTo) && !pointsTo.equals(className)) {
 						ClassInfo ptClass = g.get(pointsTo);
 						HashMap<String, Integer> ptFields = ptClass.getFieldAppear();
 						

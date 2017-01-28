@@ -13,7 +13,7 @@ public class ClassInfo {
 	ClassNode classNode;
 	
 	String className;
-	String sterotype;
+	String stereotype;
 	String extendz;
 	String color;
 	
@@ -113,7 +113,7 @@ public class ClassInfo {
 //	}
 	
 	public String getSterotype() {
-		return this.sterotype;
+		return this.stereotype;
 	}
 	
 	public String getColor() {
@@ -125,7 +125,7 @@ public class ClassInfo {
 	}
 	
 	public void setSterotype(String s) {
-		this.sterotype = s;
+		this.stereotype = s;
 	}
 	
 //	public void addInAssoc(String c) {
