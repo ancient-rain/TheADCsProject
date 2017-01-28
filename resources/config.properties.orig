@@ -1,0 +1,12 @@
+flags=-coi
+<<<<<<< HEAD
+synthetic=true
+recursive=true
+test=javax.swing.JFrame java.awt.Frame
+blacklist= java/
+=======
+synthetic=false
+recursive=true
+test=javax/swing/JFrame java/awt/Frame
+blacklist=java/
+>>>>>>> 9e63521f4e14359187f6e2f39d0230d2a9a38416
