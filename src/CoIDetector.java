@@ -3,11 +3,9 @@ import java.util.Map;
 
 public class CoIDetector implements IDetector {
 	
-	IDetector detector;
 	Graph graph;
 	
-	public CoIDetector(IDetector d, Graph g) {
-		this.detector = d;
+	public CoIDetector(Graph g) {
 		this.graph = g;
 	}
 
@@ -49,6 +47,8 @@ public class CoIDetector implements IDetector {
 //						}
 //					}
 				}
+			}
+		}
 	}
-
 }
+

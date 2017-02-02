@@ -27,7 +27,13 @@ public class GVManager {
 		System.out.println("digraph uml_diagram {");
 		System.out.println("\trankdir = BT;\n");
 		
+		Settings settings = Settings.getInstance();
+		DetectorFactory factory = new DetectorFactory(this.graph);
+		ArrayList<IDetector> detectors = factory.build(settings.getDetectors());
 		
+		for (IDetector d: detectors) {
+			d.detect();
+		}
 		
 		for(ClassInfo c : this.graph.getClasses()) {
 			List<MethodNode> methods = c.getMethods();
