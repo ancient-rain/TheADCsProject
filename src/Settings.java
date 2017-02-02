@@ -3,11 +3,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
 
 public class Settings {
-  ArrayList<String> detection;
+  ArrayList<String> flags;
   ArrayList<String> classes;
   ArrayList<String> blacklist;
   boolean recursive;
@@ -16,19 +17,21 @@ public class Settings {
   String config = "resources/config.properties";
   
   HashSet<String> blackListClasses;
+  HashMap<String, Class<?>> detectors;
   
   private final String [] primVals = new String[] {"boolean", "int", "char", "byte" ,"short", "int",
 			"long", "float", "double", "Object", "Ojbect[]", "Z", "B", "S", "I", "J", "F",
 			"D", "C", "L", "[Z", "[B", "[S", "[I", "[J", "[F", "[D", "[C", "[L", "V", "java/lang/String", "java/lang/Object"};
-  private final HashSet<String> prims = new HashSet<String>(Arrays.asList(primVals));  
+  private final HashSet<String> prims = new HashSet<String>(Arrays.asList(primVals));
+private Graph graph;  
   private volatile static Settings settings;
   
   private Settings() throws IOException {
-	  this.detection = new ArrayList<>();
+	  this.flags = new ArrayList<>();
 	  this.classes = new ArrayList<>();
 	  this.blacklist = new ArrayList<>();
 	  this.blackListClasses = new HashSet<>();
-	  
+	  this.detectors = new HashMap<String, Class<?>>();
 	  this.recursive = false;
 	  this.synthetic = false;
 	  this.commandFlags = false;
@@ -73,8 +76,8 @@ public class Settings {
 	  return this.synthetic;
   }
   
-  public ArrayList<String> getDetectors() {
-	  return this.detection;
+  public ArrayList<String> getFlags() {
+	  return this.flags;
   }
   
   public ArrayList<String> getClasses() {
@@ -83,6 +86,10 @@ public class Settings {
   
   public ArrayList<String> getBlackList() {
 	  return this.blacklist;
+  }
+  
+  public HashMap<String, Class<?>> getDetectors() {
+	  return this.detectors;
   }
   
   public void setRecursive() {
@@ -119,7 +126,7 @@ public class Settings {
   }
   
   public void addDetectors(String s) {
-	  this.detection.add(s);
+	  this.flags.add(s);
   }
   
   private void addClasses(String s) {
@@ -194,10 +201,24 @@ public class Settings {
 	  
   }
 
-public void setCommandFlags() {
-	if(!this.commandFlags) {
-		this.detection = new ArrayList<String>();
+	public void setCommandFlags() {
+		if(!this.commandFlags) {
+			this.flags = new ArrayList<String>();
+		}
+		this.commandFlags = true;
 	}
-	this.commandFlags = true;
-}
+	
+	public void addDetector(Class<?> c, String flag) {
+		this.detectors.put(flag, c);
+	}
+
+	public void addGraph(Graph graph) {
+		// TODO Auto-generated method stub
+		this.graph = graph;
+	}
+
+	public Graph getGraph() {
+		// TODO Auto-generated method stub
+		return this.graph;
+	}
 }

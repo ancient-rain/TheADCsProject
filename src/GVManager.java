@@ -29,8 +29,8 @@ public class GVManager {
 		
 		Settings settings = Settings.getInstance();
 		DetectorFactory factory = new DetectorFactory(this.graph);
-		ArrayList<IDetector> detectors = factory.build(settings.getDetectors());
-		
+		ArrayList<IDetector> detectors = factory.build(settings.getFlags());
+		System.out.println(detectors.size());
 		for (IDetector d: detectors) {
 			d.detect();
 		}

@@ -4,6 +4,11 @@ public class CoIDetector implements IDetector {
 	
 	Graph graph;
 	
+	public CoIDetector() {
+		Settings settings = Settings.getInstance();
+		this.graph = settings.getGraph();
+	}
+	
 	public CoIDetector(Graph g) {
 		this.graph = g;
 	}

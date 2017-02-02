@@ -19,6 +19,8 @@ public class UMLgen implements ICommand {
 			this.classList.add(ci);
 		}
 		Graph graph = new Graph(this.classList);
+		Settings settings = Settings.getInstance();
+		settings.addGraph(graph);
 		this.gv = new GVManager(graph);
 		displayGraph();	
 	}

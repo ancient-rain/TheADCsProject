@@ -10,6 +10,11 @@ public class SingletonDetector implements IDetector {
 
 	Graph graph;
 	
+	public SingletonDetector() {
+		Settings settings = Settings.getInstance();
+		this.graph = settings.getGraph();
+	}
+	
 	public SingletonDetector(Graph g) {
 		this.graph = g;
 	}
