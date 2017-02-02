@@ -1,13 +1,12 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+
 public class DetectorFactory {
-	
-	HashMap<String, IDetector> detectors;
 	Graph graph;
 	
 	public DetectorFactory(Graph g) {
-		this.detectors = new HashMap<String, IDetector>();
 		this.graph = g;
+//		this.detectors.put("-coi", newIDetector(g));
 	}
 	
 	public ArrayList<IDetector> build(ArrayList<String> flags) {
