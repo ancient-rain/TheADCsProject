@@ -1,16 +1,13 @@
 import java.util.HashMap;
 import java.util.Map;
-
 public class CoIDetector implements IDetector {
 	
-	IDetector detector;
 	Graph graph;
 	
-	public CoIDetector(IDetector d, Graph g) {
-		this.detector = d;
+	public CoIDetector(Graph g) {
 		this.graph = g;
 	}
-
+	
 	@Override
 	public void detect() {
 		//System.out.println("in Detect");
@@ -49,6 +46,7 @@ public class CoIDetector implements IDetector {
 //						}
 //					}
 				}
+			}
+		}
 	}
-
 }
