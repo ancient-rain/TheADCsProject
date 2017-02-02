@@ -1,73 +1,57 @@
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import org.objectweb.asm.tree.AnnotationNode;
-import org.objectweb.asm.tree.MethodNode;
-
 public class CoIDetector implements IDetector {
-<<<<<<< HEAD
 	
-=======
->>>>>>> 9e63521f4e14359187f6e2f39d0230d2a9a38416
 	Graph graph;
 	
 	public CoIDetector(Graph g) {
 		this.graph = g;
 	}
-
+	
 	@Override
 	public void detect() {
-		System.out.println("in Detect");
+		//System.out.println("in Detect");
 		HashMap<String, ClassInfo> classes = this.graph.getGraph();
 		Settings settings = Settings.getInstance();
 		
 		for (Map.Entry<String, ClassInfo> entry: classes.entrySet()) {
 			ClassInfo ci = entry.getValue();
-<<<<<<< HEAD
-			
-			if (!(ci.isAbsract() && ci.isInterface())) {
-				List<MethodNode> methods = ci.getMethods();
-				
-				for (MethodNode m : methods) {
-					if (m.visibleAnnotations != null) {
-						@SuppressWarnings("unchecked")
-						List<AnnotationNode> aNodes = m.visibleAnnotations;
-						for (AnnotationNode a : aNodes) {
-							System.out.println(a);
-						}
-					}
-				}
-				
-			}			
-		}
-=======
 			String name = entry.getKey();
-			//System.out.println("in detect looking at classes");
 			if (!(ci.isAbsract() && ci.isInterface())) {
 				String extendz = ci.getExtends();
-				//System.out.println("its not an interface or an abstract");
 				if (!settings.isPrimVal(extendz)) {
 					
-					System.out.println("its not a primitive type");
-					List<MethodNode> methods = ci.getMethods();
+					DesignParser p = new DesignParser();
+					ClassInfo clazz = new ClassInfo(p.parse(extendz));
 					
-					for (MethodNode method : methods) {
-					
-						//System.out.println(method.visibleAnnotations);
-						if (method.visibleAnnotations != null) {
-						
-							System.out.println("has visible annotations");
-							@SuppressWarnings("unchecked")
-							List<AnnotationNode> aNodes = method.visibleAnnotations;
-							AnnotationNode aNode = aNodes.get(0);
-							System.out.println(aNode.desc);	
-						}
+					if (clazz.isAbsract()) {
+						ci.setColor("orange");
 					}
+					
+					
+					
+//					System.out.println("its not a primitive type");
+//					List<MethodNode> methods = ci.getMethods();
+//					
+//					for (MethodNode method : methods) {
+//					
+//						//System.out.println(method.visibleAnnotations);
+//						if (method.visibleAnnotations != null) {
+//						
+//							System.out.println("has visible annotations");
+//							@SuppressWarnings("unchecked")
+//							List<AnnotationNode> aNodes = method.visibleAnnotations;
+//							AnnotationNode aNode = aNodes.get(0);
+//							System.out.println(aNode.desc);	
+//						}
+//					}
 				}
 			}
-		}			
->>>>>>> 9e63521f4e14359187f6e2f39d0230d2a9a38416
+		}
 	}
-
+<<<<<<< HEAD
 }
+=======
+}
+
+>>>>>>> 18fe7f93675279bd16910dbfdf6bc27a046eaee6

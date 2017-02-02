@@ -1,49 +1,36 @@
 import java.util.ArrayList;
-<<<<<<< HEAD
-
-public class DetectorFactory {
-	
-=======
 import java.util.HashMap;
-
 public class DetectorFactory {
-
+<<<<<<< HEAD
+	
 	HashMap<String, IDetector> detectors;
->>>>>>> 9e63521f4e14359187f6e2f39d0230d2a9a38416
+	Graph graph;
+	
+	public DetectorFactory(Graph g) {
+		this.detectors = new HashMap<String, IDetector>();
+		this.graph = g;
+=======
+
 	Graph graph;
 	
 	public DetectorFactory(Graph g) {
 		this.graph = g;
-<<<<<<< HEAD
+//		this.detectors.put("-coi", new CoIDetector(g));
+>>>>>>> 18fe7f93675279bd16910dbfdf6bc27a046eaee6
 	}
 	
-	public ArrayList<IDetector> build(Graph g, ArrayList<String> detectors) {
-		ArrayList<IDetector> detects = new ArrayList<>();
-		
-		for (String s: detectors) {
-			if (s.equals("-coi")) {
-				IDetector d = new CoIDetector(this.graph);
-				detects.add(d);
-			}
-		}
-		
-		return detects;
-=======
-		this.detectors = new HashMap<String, IDetector>();
-		this.detectors.put("-coi", new CoIDetector( g));
-	}
-	
-	public ArrayList<IDetector> build(ArrayList<String> detectors) {
+	public ArrayList<IDetector> build(ArrayList<String> flags) {
 		
 		ArrayList<IDetector> d = new ArrayList<>();
 		
-		for (String s: detectors) {
+		for (String s: flags) {
 			if(s.equals("-coi")) {
-				System.out.println("building coi detector");
+				//System.out.println("building coi detector");
 				d.add(new CoIDetector(this.graph));
+			} else if(s.equals("-sg")) {
+				d.add(new SingletonDetector(this.graph));
 			}
 		}
 		return d;
->>>>>>> 9e63521f4e14359187f6e2f39d0230d2a9a38416
 	}
 }
