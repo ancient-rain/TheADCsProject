@@ -45,7 +45,6 @@ private Graph graph;
 				try {
 					settings = new Settings();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -213,12 +212,10 @@ private Graph graph;
 	}
 
 	public void addGraph(Graph graph) {
-		// TODO Auto-generated method stub
 		this.graph = graph;
 	}
 
 	public Graph getGraph() {
-		// TODO Auto-generated method stub
 		return this.graph;
 	}
 }

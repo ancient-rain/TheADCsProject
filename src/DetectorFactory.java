@@ -13,7 +13,7 @@ public class DetectorFactory {
 		this.detectors.put("-coi", CoIDetector.class);
 		this.detectors.put("-sg", SingletonDetector.class);
 		this.detectors.put("-p", PrintDetector.class);
-	
+		this.detectors.put("-di", DIDetector.class);
 	}
 	
 	public ArrayList<IDetector> build(ArrayList<String> flags) {
@@ -27,22 +27,11 @@ public class DetectorFactory {
 				try {
 					d.add((IDetector) c.newInstance());
 				} catch (InstantiationException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-			
-			
-			
-//			if(s.equals("-coi")) {
-//				//System.out.println("building coi detector");
-//				d.add(new CoIDetector(this.graph));
-//			} else if(s.equals("-sg")) {
-//				d.add(new SingletonDetector(this.graph));
-//			}
 		}
 		return d;
 	}
