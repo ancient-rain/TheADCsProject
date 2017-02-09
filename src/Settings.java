@@ -21,7 +21,8 @@ public class Settings {
   
   private final String [] primVals = new String[] {"boolean", "int", "char", "byte" ,"short", "int",
 			"long", "float", "double", "Object", "Ojbect[]", "Z", "B", "S", "I", "J", "F",
-			"D", "C", "L", "[Z", "[B", "[S", "[I", "[J", "[F", "[D", "[C", "[L", "V", "java/lang/String", "java/lang/Object"};
+			"D", "C", "L", "[Z", "[B", "[S", "[I", "[J", "[F", "[D", "[C", "[L", "V", "java/lang/String",
+			"java/lang/Object", "TT", "[TT", "TE", "[TE" };
   private final HashSet<String> prims = new HashSet<String>(Arrays.asList(primVals));
 private Graph graph;  
   private volatile static Settings settings;

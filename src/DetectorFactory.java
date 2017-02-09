@@ -14,6 +14,8 @@ public class DetectorFactory {
 		this.detectors.put("-sg", SingletonDetector.class);
 		this.detectors.put("-p", PrintDetector.class);
 		this.detectors.put("-di", DIDetector.class);
+		this.detectors.put("-a", AdapterDetector.class);
+		this.detectors.put("-de", DecoratorDetector.class);
 	}
 	
 	public ArrayList<IDetector> build(ArrayList<String> flags) {

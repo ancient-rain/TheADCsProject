@@ -28,20 +28,35 @@ public class GVDependencies {
 			
 			//printing interfaces that are implemented for each class
 			ClassInfo ci = g.get(className);
+			HashSet<String> patternArrows = ci.getPatternArrows();
 			for(String interfacez : ci.getInterfaces()) {
 				if (!settings.isBlacklisted(interfacez)) {
-					System.out.println("\t<" + className + "> -> <" + interfacez + "> [arrowhead=\"onormal\", style=\"dashed\", color=\"" + ci.getColor() + "\"];");
+					if(patternArrows.contains(interfacez)) {
+						System.out.println("\t<" + className + "> -> <" + interfacez + 
+								"> [arrowhead=\"onormal\", headlabel=\"&lt;&lt;" + ci.getPatternArrow() + 
+								"&gt;&gt;\", style=\"dashed\", color=\"" + ci.getColor() + "\"];");
+					} else {
+						System.out.println("\t<" + className + "> -> <" + interfacez + 
+								"> [arrowhead=\"onormal\", style=\"dashed\", color=\"" + ci.getColor() + "\"];");
+					}
 				}
 			}
-			
 			//printing classes that this class extends
 			String extendz = ci.getExtends();
 			if(!this.settings.isPrimVal(extendz) && !settings.isBlacklisted(extendz)) {
-				System.out.println("\t<" + className + "> -> <" + extendz + "> [arrowhead=\"onormal\", color=\"" + ci.getColor() + "\"];\n");
+				if(patternArrows.contains(extendz)) {
+					System.out.println("\t<" + className + "> -> <" + extendz + 
+							"> [arrowhead=\"onormal\", headlabel=\"&lt;&lt;" + ci.getPatternArrow() + 
+							"&gt;&gt;\", color=\"" + ci.getColor() + "\"];");
+				} else {
+					System.out.println("\t<" + className + "> -> <" + extendz + 
+							"> [arrowhead=\"onormal\", color=\"" + ci.getColor() + "\"];\n");
+
+				}			
 			}
 		}
 	}
-	
+
 	public void printAssociations() {
 		HashMap<String,ClassInfo> g = this.graph.getGraph();
 		HashSet<String> doubleArrow = new HashSet<>();
@@ -49,6 +64,7 @@ public class GVDependencies {
 		for(String className : this.classNames) {
 			
 			ClassInfo ci = g.get(className);
+			HashSet<String> patternArrows = ci.getPatternArrows();
 			HashMap<String, Integer> fields = ci.getFieldAppear();
 			
 			//loop through all of the fields for the class
@@ -74,21 +90,49 @@ public class GVDependencies {
 							if(!(doubleArrow.contains(appended1) || doubleArrow.contains(appended2))) {
 								doubleArrow.add(appended1);
 								doubleArrow.add(appended2);
-								System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", style=\"dashed\", arrowtail=\"vee\", dir=\"both\", color=\"" + ci.getColor() + "\"];");
+								if(patternArrows.contains(entry.getKey())) {
+									System.out.println("\t<" + className + "> -> <" + entry.getKey() + 
+											"> [arrowhead=\"vee\", style=\"dashed\", headlabel=\"&lt;&lt;" + ci.getPatternArrow() + 
+											"&gt;&gt;\", color=\"" + ci.getColor() + "\"];");
+								} else {
+									System.out.println("\t<" + className + "> -> <" + entry.getKey() + 
+											"> [arrowhead=\"vee\", style=\"dashed\", arrowtail=\"vee\", dir=\"both\", color=\""
+											+ ci.getColor() + "\"];");
+								}
 							}
 						} else {
 							if (entry.getValue() > 1) {
-								System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", style=\"dashed\", headlabel=\"1..*\", color=\"" + ci.getColor() + "\"];");
+								System.out.println("\t<" + className + "> -> <" + entry.getKey() + 
+										"> [arrowhead=\"vee\", style=\"dashed\", headlabel=\"1..*\", color=\"" 
+										+ ci.getColor() + "\"];");
 							} else {
-								System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", style=\"dashed\", color=\"" + ci.getColor() + "\"];");
+								if(patternArrows.contains(entry.getKey())) {
+									System.out.println("\t<" + className + "> -> <" + entry.getKey() + 
+											"> [arrowhead=\"vee\", style=\"dashed\", headlabel=\"&lt;&lt;" + ci.getPatternArrow() + 
+											"&gt;&gt;\", color=\"" + ci.getColor() + "\"];");
+								} else {
+									System.out.println("\t<" + className + "> -> <" + entry.getKey() +
+											"> [arrowhead=\"vee\", style=\"dashed\", color=\""
+											+ ci.getColor() + "\"];");
+								}
 							}
 						}
 					} else {
 					
 						if (entry.getValue() > 1) {
-							System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", style=\"dashed\", headlabel=\"1..*\", color=\"" + ci.getColor() + "\"];");
+							System.out.println("\t<" + className + "> -> <" + entry.getKey() + 
+									"> [arrowhead=\"vee\", style=\"dashed\", headlabel=\"1..*\", color=\""
+									+ ci.getColor() + "\"];");
 						} else {
-							System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", style=\"dashed\", color=\"" + ci.getColor() + "\"];");
+							if(patternArrows.contains(entry.getKey())) {
+								System.out.println("\t<" + className + "> -> <" + entry.getKey() + 
+										"> [arrowhead=\"vee\", style=\"dashed\", headlabel=\"&lt;&lt;" + ci.getPatternArrow() + 
+										"&gt;&gt;\", color=\"" + ci.getColor() + "\"];");
+							} else {
+								System.out.println("\t<" + className + "> -> <" + entry.getKey() + 
+										"> [arrowhead=\"vee\", style=\"dashed\", color=\""
+										+ ci.getColor() + "\"];");
+							}
 						}
 					}
 				}
@@ -103,6 +147,7 @@ public class GVDependencies {
 		//go through all of the classes determining associations and dependencies
 		for(String className : this.classNames) {
 			ClassInfo ci = g.get(className);
+			HashSet<String> patternArrows = ci.getPatternArrows();
 			HashMap<String, Integer> fields = ci.getFieldAppear();
 			
 			if (fields.isEmpty()) {
@@ -129,21 +174,50 @@ public class GVDependencies {
 								if(!(doubleArrow.contains(appended1) || doubleArrow.contains(appended2))) {
 									doubleArrow.add(appended1);
 									doubleArrow.add(appended2);
-									System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", arrowtail=\"vee\", dir=\"both\", color=\"" + ci.getColor() + "\"];");
+									if(patternArrows.contains(entry.getKey())) {
+										System.out.println("\t<" + className + "> -> <" + entry.getKey() + 
+												"> [arrowhead=\"vee\", headlabel=\"&lt;&lt;" + ci.getPatternArrow() + 
+												"&gt;&gt;\", color=\"" + ci.getColor() + "\"];");
+									} else {
+										System.out.println("\t<" + className + "> -> <" + entry.getKey() + 
+												"> [arrowhead=\"vee\", arrowtail=\"vee\", dir=\"both\", color=\""
+												+ ci.getColor() + "\"];");
+									}
 								}	
 							} else {
 								if (entry.getValue() > 1) {
-									System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", headlabel=\"1..*\", color=\"" + ci.getColor() + "\"];");
+									System.out.println("\t<" + className + "> -> <" + entry.getKey() + 
+											"> [arrowhead=\"vee\", headlabel=\"1..*\", color=\""
+											+ ci.getColor() + "\"];");
 								} else {
-									System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", color=\"" + ci.getColor() + "\"];");
+									if(patternArrows.contains(entry.getKey())) {
+										System.out.println("\t<" + className + "> -> <" + entry.getKey() + 
+												"> [arrowhead=\"vee\", headlabel=\"&lt;&lt;" + ci.getPatternArrow() + 
+												"&gt;&gt;\", color=\"" + ci.getColor() + "\"];");
+									} else {
+										System.out.println("\t<" + className + "> -> <" + entry.getKey() + 
+												"> [arrowhead=\"vee\", color=\""
+												+ ci.getColor() + "\"];");
+								
+									}
 								}
 							}
 						} else {
 				
 							if (entry.getValue() > 1) {
-								System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", headlabel=\"1..*\", color=\"" + ci.getColor() + "\"];");
+								System.out.println("\t<" + className + "> -> <" + entry.getKey() + 
+										"> [arrowhead=\"vee\", headlabel=\"1..*\", color=\""
+										+ ci.getColor() + "\"];");
 							} else {
-								System.out.println("\t<" + className + "> -> <" + entry.getKey() + "> [arrowhead=\"vee\", color=\"" + ci.getColor() + "\"];");
+								if(patternArrows.contains(entry.getKey())) {
+									System.out.println("\t<" + className + "> -> <" + entry.getKey() + 
+											"> [arrowhead=\"vee\", headlabel=\"&lt;&lt;" + ci.getPatternArrow() + 
+											"&gt;&gt;\", color=\"" + ci.getColor() + "\"];");
+								} else {
+									System.out.println("\t<" + className + "> -> <" + entry.getKey() + 
+											"> [arrowhead=\"vee\", color=\""
+											+ ci.getColor() + "\"];");
+								}
 							}
 						}
 					}	

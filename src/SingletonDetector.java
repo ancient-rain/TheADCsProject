@@ -22,7 +22,6 @@ public class SingletonDetector implements IDetector {
 	@Override
 	public void detect() {
 		HashMap<String, ClassInfo> classes = this.graph.getGraph();
-		Settings settings = Settings.getInstance();
 		for (Map.Entry<String, ClassInfo> entry: classes.entrySet()) {
 			boolean fieldSame = false;
 			boolean privateInit = false;
@@ -54,16 +53,11 @@ public class SingletonDetector implements IDetector {
 				}
 				
 				if(privateInit) {
-					ci.setColor("blue");
+					ci.setColor("cyan");
 					ci.setSterotype("Singleton");
+					ci.setIsPattern();
 				}
 			}
-			
-			
-			
-			
-			
-		
 		}
 	}
 

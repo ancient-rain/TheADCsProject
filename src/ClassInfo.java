@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Stack;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -16,23 +18,33 @@ public class ClassInfo {
 	String stereotype;
 	String extendz;
 	String color;
+	String patternArrow;
 	
 	List<String> implementz;
+	
+	HashSet<String> patternArrows;
 	
 	HashMap<String, Integer> fieldAppear;
 	HashMap<String, Integer> methodAppear;
 	
 	Settings settings;
+
+	private boolean doesImplement = false;
+	private boolean isInterface = false;
+	private boolean isPattern = false;
 	
 	public ClassInfo(ClassNode classNode) {
 		this.classNode = classNode;
 		this.className = this.classNode.name;
 		this.extendz = this.classNode.superName;
 		this.implementz = this.getInterfacez();
+		this.patternArrows = new HashSet<>();
 		this.fieldAppear = new HashMap<>(); 
 		this.methodAppear = new HashMap<>();
 		this.settings = Settings.getInstance();
 		this.color = "black";
+		
+		this.isInterface = (this.classNode.access & Opcodes.ACC_INTERFACE) > 0;
 		this.populateFieldAppear();
 		this.populateMethodAppear();
 	}
@@ -69,17 +81,24 @@ public class ClassInfo {
         ArrayList<String> split = new ArrayList<>();
 		for(String name : unSplit) {
 			//int length;
-//			System.out.println(name);
+//			System.out.println(this.className + ": " + name);
 //			String[] fields = name.split("/");
 //			length = fields.length - 1;
 //			
 			split.add(name);
+		}
+		if(split.size() > 0) {
+			this.doesImplement = true;
 		}
 		return split;
 	}
 	
 	public List<String> getInterfaces() {
 		return this.implementz;
+	}
+	
+	public boolean getDoesImplement() {
+		return this.doesImplement;
 	}
 	
 //	private String getExtendz() {
@@ -120,6 +139,18 @@ public class ClassInfo {
 		return this.color;
 	}
 	
+	public HashSet<String> getPatternArrows() {
+		return this.patternArrows;
+	}
+	
+	public String getPatternArrow() {
+		return this.patternArrow;
+	}
+	
+	public String setPatternArrow(String pattern) {
+		return this.patternArrow = pattern;
+	}
+	
 	public void setColor(String c) {
 		this.color = c;
 	}
@@ -128,24 +159,24 @@ public class ClassInfo {
 		this.stereotype = s;
 	}
 	
-//	public void addInAssoc(String c) {
-//		this.inAssocz.add(c);
-//	}
-	
-//	public void addInDepends(String c) {
-//		this.inDependz.add(c);
-//	}
+	public void setIsPattern() {
+		this.isPattern = true;
+	}
 	
 	public boolean isPublic() {
 		return (this.classNode.access & Opcodes.ACC_PUBLIC) > 0;
 	}
 	
 	public boolean isInterface() {
-		return (this.classNode.access & Opcodes.ACC_INTERFACE) > 0;
+		return this.isInterface;
 	}
 	
 	public boolean isAbsract() {
 		return (this.classNode.access & Opcodes.ACC_ABSTRACT) > 0;
+	}
+	
+	public boolean isPattern() {
+		return this.isPattern;
 	}
 	
 	public boolean hasFields() {
@@ -162,23 +193,49 @@ public class ClassInfo {
 		for (FieldNode f : fs) {
 			if (f.signature != null) {
 				String colEleType = f.signature;
-//				System.out.println(colEleType);
-
-				// get rid of carrots
-				String[] temp = colEleType.split("<");
-				String temp1 = temp[1];
 				
-				//get rid of the L in front of the object
-				String nameJunk = temp1.substring(1);
+				Stack<String> type = new Stack<>();
+				char[] chars = colEleType.toCharArray();
+				int lastIndex = 0;
+				for (int i = 0; i < chars.length; i++) {
+					if(chars[i] == '<') {
+						type.push(colEleType.substring(lastIndex, i));
+						lastIndex = i;
+					} else if (chars[i] == '>'){
+						type.push(colEleType.substring(lastIndex, i));
+						break;	
+					}
+				}
 				
-				//get rid of the junk at the end
-				String[] nameSplit = nameJunk.split(";");
-				
-				//get the actual name
-				String name = nameSplit[0];
-//				System.out.println(name);
-				this.fieldAppear.put(name, 2);
-				
+				if(!type.isEmpty()) {
+					String actualType = type.pop();
+					if(actualType.charAt(0) == 'L') {
+						actualType = actualType.substring(1);
+						String[] types = actualType.split(";");
+						for(int i = 0; i < types.length; i++) {
+							if(!settings.isPrimVal(types[i])) {
+								System.out.println(types[i]);
+								this.fieldAppear.put(types[i], 2);
+							}
+						}
+					}
+				}
+//				//System.out.println(colEleType);
+//
+//				// get rid of carrots
+//					String[] temp = colEleType.split("<");
+//					String temp1 = temp[temp.length - 1];
+//					
+//					//get rid of the L in front of the object
+//					String nameJunk = temp1.substring(1);
+//					
+//					//get rid of the junk at the end
+//					String[] nameSplit = nameJunk.split(";");
+//					
+//					//get the actual name
+//					String name = nameSplit[0];
+//	//				System.out.println(name);
+//					this.fieldAppear.put(name, 2);
 			} else if (f.desc.charAt(0) == '['){
 				String colEleType = f.desc;
 				
@@ -190,7 +247,7 @@ public class ClassInfo {
 				this.fieldAppear.put(name, 2);
 			} else { // if not a collection
 				String type = f.desc;
-//				System.out.println(type + " type");
+				//System.out.println(type + " " + this.className);
 				
 				String name = type;
 				if (!this.settings.isPrimVal(type)) {
@@ -252,5 +309,10 @@ public class ClassInfo {
 				}
 			}
 		}
+	}
+
+	public void addPatternArrow(String name) {
+		// TODO Auto-generated method stub
+		this.patternArrows.add(name);
 	}
 }

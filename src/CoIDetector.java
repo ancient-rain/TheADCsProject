@@ -32,24 +32,6 @@ public class CoIDetector implements IDetector {
 					if (clazz.isAbsract()) {
 						ci.setColor("orange");
 					}
-					
-					
-					
-//					System.out.println("its not a primitive type");
-//					List<MethodNode> methods = ci.getMethods();
-//					
-//					for (MethodNode method : methods) {
-//					
-//						//System.out.println(method.visibleAnnotations);
-//						if (method.visibleAnnotations != null) {
-//						
-//							System.out.println("has visible annotations");
-//							@SuppressWarnings("unchecked")
-//							List<AnnotationNode> aNodes = method.visibleAnnotations;
-//							AnnotationNode aNode = aNodes.get(0);
-//							System.out.println(aNode.desc);	
-//						}
-//					}
 				}
 			}
 		}
