@@ -60,10 +60,6 @@ public class Graph {
 				}
 				
 			}
-			
-//			for (ClassInfo ci : this.classes){
-//				System.out.println(ci.getClassName());
-//			}
 		}
 	}
 	

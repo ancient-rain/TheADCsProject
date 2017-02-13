@@ -15,7 +15,6 @@ public class CoIDetector implements IDetector {
 	
 	@Override
 	public void detect() {
-		//System.out.println("in Detect");
 		HashMap<String, ClassInfo> classes = this.graph.getGraph();
 		Settings settings = Settings.getInstance();
 		
