@@ -49,18 +49,6 @@ public class ClassInfo {
 		this.populateMethodAppear();
 	}
 	
-//	private String getClazzName() {
-//		// this gets the name of the class.
-//		String name = this.classNode.name;
-//		System.out.println(name);
-//		int length;
-//		
-//		String[] fields = name.split("/");
-//		length = fields.length - 1;
-//		
-//		return fields[length];
-//	}
-	
 	public String getClassName() {
 		return this.className;
 	}
@@ -79,12 +67,7 @@ public class ClassInfo {
 	private List<String> getInterfacez() {
 		List<String> unSplit = this.classNode.interfaces;
         ArrayList<String> split = new ArrayList<>();
-		for(String name : unSplit) {
-			//int length;
-//			System.out.println(this.className + ": " + name);
-//			String[] fields = name.split("/");
-//			length = fields.length - 1;
-//			
+		for(String name : unSplit) {		
 			split.add(name);
 		}
 		if(split.size() > 0) {
@@ -101,16 +84,6 @@ public class ClassInfo {
 		return this.doesImplement;
 	}
 	
-//	private String getExtendz() {
-//		String superName = this.classNode.superName;
-//		int length;
-//		
-//		String[] path = superName.split("/");
-//		length = path.length - 1;
-//		
-//		return path[length];
-//	}
-	
 	public String getExtends() {
 		return this.extendz;
 	}
@@ -122,14 +95,6 @@ public class ClassInfo {
 	public HashMap<String, Integer> getMethodAppear() {
 		return this.methodAppear;
 	}
-	
-//	public List<String> getInAssoc() {
-//		return this.inAssocz;
-//	}
-	
-//	public List<String> getInDepend() {
-//		return this.inDependz;
-//	}
 	
 	public String getSterotype() {
 		return this.stereotype;
@@ -220,22 +185,6 @@ public class ClassInfo {
 						}
 					}
 				}
-//				//System.out.println(colEleType);
-//
-//				// get rid of carrots
-//					String[] temp = colEleType.split("<");
-//					String temp1 = temp[temp.length - 1];
-//					
-//					//get rid of the L in front of the object
-//					String nameJunk = temp1.substring(1);
-//					
-//					//get rid of the junk at the end
-//					String[] nameSplit = nameJunk.split(";");
-//					
-//					//get the actual name
-//					String name = nameSplit[0];
-//	//				System.out.println(name);
-//					this.fieldAppear.put(name, 2);
 			} else if (f.desc.charAt(0) == '['){
 				String colEleType = f.desc;
 				
@@ -247,13 +196,11 @@ public class ClassInfo {
 				this.fieldAppear.put(name, 2);
 			} else { // if not a collection
 				String type = f.desc;
-				//System.out.println(type + " " + this.className);
 				
 				String name = type;
 				if (!this.settings.isPrimVal(type)) {
 					name = type.substring(1, type.length() - 1);
 				}
-//				System.out.println(name + " type");
 				if(this.fieldAppear.containsKey(name)) {
 					int appear = this.fieldAppear.get(name);
 					this.fieldAppear.put(name, appear++);
@@ -262,11 +209,6 @@ public class ClassInfo {
 				}
 			}
 		}
-		
-//		for (Map.Entry<String, Integer> entry : this.fieldAppear.entrySet()) {
-//			System.out.println("key: " + entry.getKey() + " val: " + entry.getValue());
-//		}
-		
 	}
 	
 	private void populateMethodAppear() {
@@ -312,7 +254,6 @@ public class ClassInfo {
 	}
 
 	public void addPatternArrow(String name) {
-		// TODO Auto-generated method stub
 		this.patternArrows.add(name);
 	}
 }

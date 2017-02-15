@@ -24,7 +24,7 @@ public class Settings {
 			"D", "C", "L", "[Z", "[B", "[S", "[I", "[J", "[F", "[D", "[C", "[L", "V", "java/lang/String",
 			"java/lang/Object", "TT", "[TT", "TE", "[TE" };
   private final HashSet<String> prims = new HashSet<String>(Arrays.asList(primVals));
-private Graph graph;  
+  private Graph graph;  
   private volatile static Settings settings;
   
   private Settings() throws IOException {
