@@ -38,7 +38,7 @@ public class DIDetector implements IDetector {
 			}
 			
 			if (violations > nonViolations) {
-				ci.setColor("yellow");
+				ci.setColor("purple");
 			}
 		}
 	}
